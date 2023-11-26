@@ -30,7 +30,7 @@ const char WAIT_TIME_IN_TRAFFIC_JAM = 'w';
 /**
  * Global variables initialization
  */
-double glob_time_to = 1000;
+double glob_time_to = 500;
 
 double glob_accident_rate = 0.1;
 
@@ -40,11 +40,14 @@ double glob_traffic_jam_wait_time = 1;
 
 int glob_amount_of_buses = 4;
 
-int glob_amount_of_bus_stops = 10;
+int glob_amount_of_bus_stops = 5;
 
-double glob_time_between_stops = 5;
+double glob_time_between_stops = 3;
 
-double glob_time_between_bus_starts = 30;
+double glob_time_between_bus_starts = 10;
+
+Facility glob_bus_facility[BUSES];
+
 /**
  * Constructor
  *

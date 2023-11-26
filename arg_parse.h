@@ -9,8 +9,12 @@
  * @author xxx
  */
 
+#include <simlib.h>
+
 #ifndef DOPRAVA_ARG_PARSE_H
 #define DOPRAVA_ARG_PARSE_H
+
+#define BUSES 4
 
 
 class arg_parse {
@@ -43,6 +47,8 @@ extern double glob_time_between_bus_starts;
 
 // Global variable - how many buses can be in one station
 extern int glob_amount_of_bus_spots_on_bus_stop;
+
+extern Facility glob_bus_facility[BUSES];
 
 void arg_parse(int argc, char *argv[]);
 

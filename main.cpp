@@ -9,12 +9,12 @@
  * @author xxx
  */
 
+
 #include <simlib.h>
 #include <vector>
 
 #include "arg_parse.h"
 #include "Classes/Bus.h"
-
 /**
  * New Bus Generator
  */
