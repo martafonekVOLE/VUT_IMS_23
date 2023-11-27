@@ -30,23 +30,33 @@ const char WAIT_TIME_IN_TRAFFIC_JAM = 'w';
 /**
  * Global variables initialization
  */
-double glob_time_to = 500;
+double glob_time_to = 300;
 
-double glob_accident_rate = 0.1;
+double glob_accident_rate = 20.0;
 
-double glob_traffic_jam_rate = 0.5;
+double glob_traffic_jam_rate = 15.0;
 
-double glob_traffic_jam_wait_time = 1;
+double glob_traffic_jam_wait_time = 5.0;
 
 int glob_amount_of_buses = 4;
 
 int glob_amount_of_bus_stops = 5;
 
-double glob_time_between_stops = 3;
+double glob_time_between_stops = 5.0;
 
-double glob_time_between_bus_starts = 10;
+double glob_time_between_bus_starts = 30.0;
 
-Facility glob_bus_facility[BUSES];
+Facility glob_bus_facility[MAX_AMOUNT_OF_BUSES];
+
+Facility glob_bus_stops_facility[MAX_AMOUNT_OF_STOPS];
+
+std::vector<Queue*> glob_bus_stop_queues_vector;
+
+std::vector<Facility*> glob_bus_stops_vector;
+
+Queue waitingForBusDispatch;
+
+Queue waitingForBusDispatchWithPriority;
 
 /**
  * Constructor
@@ -59,7 +69,7 @@ Facility glob_bus_facility[BUSES];
 void arg_parse(int argc, char *argv[]) {
     int option = 0;
 
-    while ((option = getopt(argc, argv, "time")) != -1)
+    while ((option = getopt(argc, argv, "t:a:b:s:l:j:g:w")) != -1)
     {
         switch (option) {
             case TIME:
@@ -93,7 +103,7 @@ void arg_parse(int argc, char *argv[]) {
                 int newBusAmount = std::stoi(optarg);
                 if (newBusAmount < 1)
                 {
-                    std::cerr << "Argument AMOUNT OF BUSES vyžaduje celé kladné číslo (kromě nuly). Číslo reprezentuje počet autobusů." << std::endl;
+                    std::cerr << "Argument AMOUNT OF MAX_AMOUNT_OF_BUSES vyžaduje celé kladné číslo (kromě nuly). Číslo reprezentuje počet autobusů." << std::endl;
                     exit(1);
                 }
 
@@ -154,5 +164,11 @@ void arg_parse(int argc, char *argv[]) {
                 exit(1);
             }
         }
+    }
+
+    for (int i = 0; i < glob_amount_of_bus_stops; i++)
+    {
+        glob_bus_stops_vector.push_back(new Facility);
+        glob_bus_stop_queues_vector.push_back(new Queue);
     }
 }

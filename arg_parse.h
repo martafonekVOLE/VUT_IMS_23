@@ -6,16 +6,17 @@
  * @date 21.11.2023
  *
  * @author Martin Pech (xpechm00)
- * @author xxx
+ * @author Josef Škorpík (xskorp07)
  */
 
 #include <simlib.h>
+#include <vector>
 
 #ifndef DOPRAVA_ARG_PARSE_H
 #define DOPRAVA_ARG_PARSE_H
 
-#define BUSES 4
-
+#define MAX_AMOUNT_OF_BUSES 100
+#define MAX_AMOUNT_OF_STOPS 100
 
 class arg_parse {
 
@@ -48,7 +49,17 @@ extern double glob_time_between_bus_starts;
 // Global variable - how many buses can be in one station
 extern int glob_amount_of_bus_spots_on_bus_stop;
 
-extern Facility glob_bus_facility[BUSES];
+extern Facility glob_bus_facility[MAX_AMOUNT_OF_BUSES];
+
+extern Queue waitingForBusDispatch;
+
+extern Queue waitingForBusDispatchWithPriority;
+
+extern std::vector<Facility*> glob_bus_stops_vector;
+
+extern std::vector<Queue*> glob_bus_stop_queues_vector;
+
+extern Facility glob_bus_stops_facility[MAX_AMOUNT_OF_STOPS];
 
 void arg_parse(int argc, char *argv[]);
 

@@ -6,17 +6,16 @@
  * @date 21.11.2023
  *
  * @author Martin Pech (xpechm00)
- * @author xxx
+ * @author Josef Škorpík (xskorp07)
  */
 
-
 #include <simlib.h>
-#include <vector>
-
 #include "arg_parse.h"
 #include "Classes/Bus.h"
+
 /**
  * New Bus Generator
+ * @brief This method is responsible for generating new Processes until time runs out
  */
 class BusDispatcher: public Event
 {
@@ -32,8 +31,8 @@ class BusDispatcher: public Event
 /**
  * Main function
  *
- * @param argc
- * @param argv
+ * @param int argc
+ * @param char* argv
  * @return
  */
 int main(int argc, char *argv[])
@@ -45,6 +44,4 @@ int main(int argc, char *argv[])
     (new BusDispatcher)->Activate();
 
     Run();
-    // pro každoou zastávku aktivovat příchody lidí
-
 }

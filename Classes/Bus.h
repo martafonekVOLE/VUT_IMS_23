@@ -6,14 +6,14 @@
 
 class Bus: public Process{
 public:
-    Facility firstBusStopFacility[1];
-    Queue waitingForBusDispatch;
     Queue firstBusStopQueue;
 
     bool shouldBeQueued = true;
     int actualBus = 0;
     int startBusStop;
     double waitTimeToFirstStop;
+    bool isSpareBus = false;
+    int spareBusFor;
 
     /**
      * Construct
@@ -21,7 +21,7 @@ public:
      * @param startStop
      * @param waitTimeStop
      */
-    explicit Bus(int startStop = 0, double waitTimeStop = 0);
+    explicit Bus(int startStop = -1, double waitTimeStop = 0, int spareFor = -1);
 
     /**
      * Decide if bus can be dispatched or must be put in a queue
@@ -36,7 +36,7 @@ public:
     /**
      *
      */
-    void HandleBusStop();
+    void HandleBusStop(int currentBusStop);
 
     /**
      * Does generate traffic jam with some probability
