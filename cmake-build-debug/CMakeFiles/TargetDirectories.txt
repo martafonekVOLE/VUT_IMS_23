@@ -1,3 +1,0 @@
-/home/martafonek/Simlib projects/Doprava/cmake-build-debug/CMakeFiles/Doprava.dir
-/home/martafonek/Simlib projects/Doprava/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/martafonek/Simlib projects/Doprava/cmake-build-debug/CMakeFiles/rebuild_cache.dir

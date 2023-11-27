@@ -1,7 +1,0 @@
-# ninja log v5
-17	605	1700648194849710052	CMakeFiles/Doprava.dir/Classes/Accident.cpp.o	21752242da3bb336
-36	553	1700648194796376243	CMakeFiles/Doprava.dir/Classes/FirstBusStop.cpp.o	efb02db4bf9eb85a
-31	505	1700648194739709071	CMakeFiles/Doprava.dir/Classes/BusStop.cpp.o	7bf1c1bb7db73967
-0	519	1700648194763042612	CMakeFiles/Doprava.dir/main.cpp.o	ba2c218f86183a9e
-46	505	1700648194743042434	CMakeFiles/Doprava.dir/Classes/SecondBusStop.cpp.o	e49e534e6c365467
-10	575	1700648194819709785	CMakeFiles/Doprava.dir/arg_parse.cpp.o	ccc4010c1ea63895
