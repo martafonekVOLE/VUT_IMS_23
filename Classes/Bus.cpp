@@ -50,7 +50,6 @@ void Bus::BusMovement()
     {
         Print("\n[Time: [%f]]\tAutobus číslo [%d] vyřáží do další zastávky.", Time, (actualBus + 1));
 
-        // Traffic Jam occurred
         DecideAboutTrafficJam();
 
         // If bus is replacement bus, it will take some time to reach accident site
@@ -61,7 +60,7 @@ void Bus::BusMovement()
         HandleBusStop(currentBusStop);
 
         // Accident happened at bus stop exit
-        // todo disable accident atz last stop
+        // todo test accident att last stop
         if(AccidentOccurred(currentBusStop))
         {
             return;
@@ -82,7 +81,6 @@ void Bus::HandleBusStop(int currentBusStop)
     rerunAfterActivation:
 
     if (! glob_bus_stops_vector[currentBusStop][0].Busy()) {
-//    if (! glob_bus_stops_facility[currentBusStop].Busy()) {
         Seize(glob_bus_stops_vector[currentBusStop][0]);
         Print("\n[Time: [%f]]\tAutobus číslo [%d] je v zastávce [%d].", Time, (actualBus + 1), (currentBusStop + 1));
         Wait(Exponential(3));
@@ -119,8 +117,6 @@ void Bus::DecideAboutTrafficJam()
  */
 bool Bus::AccidentOccurred(int currentBusStop)
 {
-
-
     if(Random() <= (glob_accident_rate / 100.0))
     {
         (new Accident(actualBus, currentBusStop))->Activate();

@@ -1,13 +1,29 @@
+/**
+ * @project Model logistiky - hromadná osobní přeprava, IMS
+ * @brief Bus Process Header file
+ *
+ * @file Bus.h
+ * @date 21.11.2023
+ *
+ * @author Martin Pech (xpechm00)
+ * @author Josef Škorpík (xskorp07)
+ */
+
 #include <simlib.h>
 #include "Accident.h"
 
 #ifndef DOPRAVA_BUS_H
 #define DOPRAVA_BUS_H
 
+/**
+ * Class Definition
+ */
 class Bus: public Process{
-public:
-    Queue firstBusStopQueue;
 
+/**
+ * Public scope
+ */
+public:
     bool shouldBeQueued = true;
     int actualBus = 0;
     int startBusStop;
@@ -34,7 +50,7 @@ public:
     void BusMovement();
 
     /**
-     *
+     * Does handle bus stops
      */
     void HandleBusStop(int currentBusStop);
 
@@ -58,4 +74,4 @@ public:
 };
 
 
-#endif //DOPRAVA_BUS_H
+#endif
