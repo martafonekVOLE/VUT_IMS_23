@@ -9,6 +9,7 @@ class Accident: public Process
 public:
     int busNumber;
     int busStop;
+    int people;
 
     /**
      * Construct
@@ -16,7 +17,7 @@ public:
      * @param bus
      * @param stop
     */
-    Accident(int bus, int stop);
+    Accident(int bus, int stop, int peopleInBus);
 
     /**
      * Behavior describes behavior of Accident

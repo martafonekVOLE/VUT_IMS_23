@@ -1,21 +1,23 @@
 #include "Bus.h"
 #include "../arg_parse.h"
+#include <cmath>
 
 /**
  * @inheritDoc
  */
-Bus::Bus(int startStop, double waitTimeStop, int spareFor)
+Bus::Bus(int startStop, double waitTimeStop, int spareFor, int people)
 {
     startBusStop = startStop + 1;
     waitTimeToFirstStop = waitTimeStop;
     spareBusFor = spareFor;
+    capacity = glob_bus_capacity;
 
     if(startStop != -1)
     {
         isSpareBus = true;
-        Print("\n[Time: [%f]]\tNáhradní autobus číslo vyřáží do zastávky [%d]. Cesta mu zabere [%f].", Time, startStop+1, waitTimeStop);
+        peopleInBus = people;
+        Print("\n[Time: %f]\tNáhradní autobus vyřáží do zastávky [%d]. Cesta mu zabere [%f].", Time, startStop+1, waitTimeStop);
     }
-
 }
 
 /**
@@ -43,19 +45,19 @@ void Bus::BusMovement()
     if(isSpareBus){
         // todo exponential as global and separate
         Wait(waitTimeToFirstStop);
-        Print("\n[Time: [%f]]\tAutobus číslo [%d] přeložil cestující a není ho již možné použít.", Time, spareBusFor + 1);
+        Print("\n[Time: %f]\tAutobus číslo [%d] přeložil cestující a není ho již možné použít.", Time, spareBusFor + 1);
     }
 
     while(currentBusStop < (glob_amount_of_bus_stops - 1))
     {
-        Print("\n[Time: [%f]]\tAutobus číslo [%d] vyřáží do další zastávky.", Time, (actualBus + 1));
+        Print("\n[Time: %f]\tAutobus číslo [%d] vyřáží do další zastávky.", Time, (actualBus + 1));
 
         // Traffic Jam occurred
         DecideAboutTrafficJam();
 
         // If bus is replacement bus, it will take some time to reach accident site
-        double waitTime = (waitTimeToFirstStop != 0.0) ? waitTimeToFirstStop : Exponential(glob_time_between_stops);
-        Wait(waitTime+20);
+        double waitTime = (waitTimeToFirstStop != 0.0) ? waitTimeToFirstStop : Normal(glob_time_between_stops, 3);
+        Wait(waitTime);
         waitTimeToFirstStop = 0.0;
 
         HandleBusStop(currentBusStop);
@@ -70,7 +72,11 @@ void Bus::BusMovement()
         currentBusStop += 1;
     }
 
-    Print("\n[Time: [%f]]\tAutobus číslo [%d] dokončil linku a vrací se zpět.", Time, (actualBus + 1));
+    for (int i = 0; i < peopleInBus; i++) {
+        glob_passenger_happiness += round(Uniform(1, 3));
+    }
+
+    Print("\n[Time: %f]\tAutobus číslo [%d] dokončil linku a vrací se zpět.", Time, (actualBus + 1));
     Release(glob_bus_facility[actualBus]);
 }
 
@@ -82,9 +88,31 @@ void Bus::HandleBusStop(int currentBusStop)
     rerunAfterActivation:
 
     if (! glob_bus_stops_vector[currentBusStop][0].Busy()) {
-//    if (! glob_bus_stops_facility[currentBusStop].Busy()) {
         Seize(glob_bus_stops_vector[currentBusStop][0]);
-        Print("\n[Time: [%f]]\tAutobus číslo [%d] je v zastávce [%d].", Time, (actualBus + 1), (currentBusStop + 1));
+        Print("\n[Time: %f]\tAutobus číslo [%d] je v zastávce [%d].", Time, (actualBus + 1), (currentBusStop + 1));
+
+        int maxPeopleLeavingBus = glob_max_amount_of_people_leaving_bus_before_final_stop > peopleInBus ? peopleInBus : glob_max_amount_of_people_leaving_bus_before_final_stop;
+        if(peopleInBus > 0)
+        {
+            peopleInBus -= round(Uniform(0, maxPeopleLeavingBus));
+        }
+
+        int peopleWaitingForBus = round(Uniform(0, glob_max_amount_of_people_waiting_for_bus));
+        if (capacity >= (peopleInBus + peopleWaitingForBus))
+        {
+            peopleInBus += peopleWaitingForBus;
+        }
+        else
+        {
+            int peopleGettingIntoBus = capacity - peopleInBus;
+            int peopleWaitingForNextBus = peopleWaitingForBus - peopleGettingIntoBus;
+            Print("\n[Time: %f]\tDo autobusu se nevešlo [%d] lidí.", peopleWaitingForNextBus);
+
+            for (int i = 0; i < peopleWaitingForNextBus; i++) {
+                glob_passenger_happiness -= round(Uniform(1, 2));
+            }
+        }
+
         Wait(Exponential(3));
         Release(glob_bus_stops_vector[currentBusStop][0]);
 
@@ -95,7 +123,7 @@ void Bus::HandleBusStop(int currentBusStop)
 
         return;
     }
-    Print("\n[Time: [%f]]\tAutobus číslo [%d] čeká na zastávku.", Time, (actualBus + 1));
+    Print("\n[Time: %f]\tAutobus číslo [%d] čeká na zastávku.", Time, (actualBus + 1));
     glob_bus_stop_queues_vector[currentBusStop]->Insert(this);
     Passivate();
     goto rerunAfterActivation;
@@ -109,8 +137,13 @@ void Bus::DecideAboutTrafficJam()
     if(Random() <= (glob_traffic_jam_rate / 100.0))
     {
         double waitTime = Exponential(glob_traffic_jam_wait_time);
-        Print("\n[Time: [%f]]\tAutobus číslo [%d] se dostal do zácpy a zdrží se [%f].", Time, (actualBus + 1), waitTime);
+
+        Print("\n[Time: %f]\t\033[1;33mAutobus číslo [%d] se dostal do zácpy a zdrží se [%f].\033[0m", Time, (actualBus + 1), waitTime);
         Wait(waitTime);
+
+        for (int i = 0; i < peopleInBus; ++i) {
+            glob_passenger_happiness -= round(Uniform(0, 1));
+        }
     }
 }
 
@@ -119,11 +152,9 @@ void Bus::DecideAboutTrafficJam()
  */
 bool Bus::AccidentOccurred(int currentBusStop)
 {
-
-
     if(Random() <= (glob_accident_rate / 100.0))
     {
-        (new Accident(actualBus, currentBusStop))->Activate();
+        (new Accident(actualBus, currentBusStop, peopleInBus))->Activate();
         return true;
     }
     return false;
@@ -142,15 +173,19 @@ void Bus::Behavior()
         } else {
             waitingForBusDispatch.Insert(this);
         }
-        Print("\n[Time: [%f]]\tPožadavek na vyslání autobusu byl zařazen do fronty.", Time);
+        Print("\n[Time: %f]\t\033[1;35mPožadavek na vyslání autobusu byl zařazen do fronty.\033[0m", Time);
         Passivate();
+
+        for (int i = 0; i < glob_amount_of_bus_stops * round(Uniform(0,glob_max_amount_of_people_waiting_for_bus)); i++) {
+            glob_passenger_happiness -= round(Uniform(0,1));
+        }
 
         goto rerunAfterActivation;
     }
 
     Seize(glob_bus_facility[actualBus]);
 
-    Print("\n[Time: [%f]]\tAutobus s číslem [%d] byl vyslán na linku.", Time, (actualBus + 1));
+    Print("\n[Time: %f]\tAutobus s číslem [%d] byl vyslán na linku.", Time, (actualBus + 1));
 
     BusMovement();
 

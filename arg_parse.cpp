@@ -26,6 +26,7 @@ const char TIME_BETWEEN_STOPS = 'l';
 const char TRAFFIC_JAM_RATE = 'j';
 const char TIME_BETWEEN_BUS_STARTS = 'g';
 const char WAIT_TIME_IN_TRAFFIC_JAM = 'w';
+const char CAPACITY = 'c';
 
 /**
  * Global variables initialization
@@ -38,13 +39,21 @@ double glob_traffic_jam_rate = 15.0;
 
 double glob_traffic_jam_wait_time = 5.0;
 
-int glob_amount_of_buses = 4;
+int glob_amount_of_buses = 5;
 
 int glob_amount_of_bus_stops = 5;
 
-double glob_time_between_stops = 5.0;
+double glob_time_between_stops = 15.0;
 
 double glob_time_between_bus_starts = 30.0;
+
+int glob_bus_capacity = 75;
+
+// todo add optarg
+int glob_max_amount_of_people_waiting_for_bus = 15;
+int glob_max_amount_of_people_leaving_bus_before_final_stop = 5;
+
+double glob_passenger_happiness = 0;
 
 Facility glob_bus_facility[MAX_AMOUNT_OF_BUSES];
 
@@ -69,7 +78,7 @@ Queue waitingForBusDispatchWithPriority;
 void arg_parse(int argc, char *argv[]) {
     int option = 0;
 
-    while ((option = getopt(argc, argv, "t:a:b:s:l:j:g:w")) != -1)
+    while ((option = getopt(argc, argv, "t:a:b:s:l:j:g:w:c")) != -1)
     {
         switch (option) {
             case TIME:
@@ -117,6 +126,7 @@ void arg_parse(int argc, char *argv[]) {
                 if(newStopsAmount < 1)
                 {
                     std::cerr << "Argument AMOUNT OF BUS STOPS vyžaduje celé kladné číslo (kromě nuly). Číslo reprezentuje počet autobusových zastávek na trase." << std::endl;
+                    exit(1);
                 }
 
                 glob_amount_of_bus_stops = newStopsAmount;
@@ -129,6 +139,7 @@ void arg_parse(int argc, char *argv[]) {
                 if (newTimeBetweenStops < 0)
                 {
                     std::cerr << "Argument TIME BETWEEN STOPS vyžaduje číslo větší než nula. Číslo reprezentuje dobu přejezdu mezi zastávkami." << std::endl;
+                    exit(1);
                 }
 
                 glob_time_between_stops = newTimeBetweenStops;
@@ -141,6 +152,7 @@ void arg_parse(int argc, char *argv[]) {
                 if (newTimeBetweenBusStarts < 0.0)
                 {
                     std::cerr << "Argument TIME BETWEEN BUS STARTS vyžaduje číslo větší než nula. Číslo reprezentuje dobu, po které je vyslán nový autobus." << std::endl;
+                    exit(1);
                 }
 
                 glob_time_between_bus_starts = newTimeBetweenBusStarts;
@@ -153,9 +165,24 @@ void arg_parse(int argc, char *argv[]) {
                 if (newTimeInTrafficJam < 0.0)
                 {
                     std::cerr << "Argument TIME IN TRAFFIC JAM vyžaduje číslo větší nebo rovno nule. Číslo reprezentuje dobu, po kterou stojí autobus v zácpě." << std::endl;
+                    exit(1);
                 }
 
                 glob_traffic_jam_wait_time = newTimeInTrafficJam;
+                break;
+            }
+
+            case CAPACITY:
+            {
+                int newCapacity = std::stoi(optarg);
+                if(newCapacity < 1)
+                {
+                    std::cerr << "Argument CAPACITY vyžaduje číslo větší nebo rovno jedné. Číslo reprezentuje kapacitu autobusu." << std::endl;
+                    exit(1);
+                }
+                std::cerr << "TEST" << std::endl;
+
+                glob_bus_capacity = newCapacity;
                 break;
             }
 

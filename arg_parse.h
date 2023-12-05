@@ -49,6 +49,14 @@ extern double glob_time_between_bus_starts;
 // Global variable - how many buses can be in one station
 extern int glob_amount_of_bus_spots_on_bus_stop;
 
+extern double glob_passenger_happiness;
+
+extern int glob_bus_capacity;
+
+extern int glob_max_amount_of_people_waiting_for_bus;
+
+extern int glob_max_amount_of_people_leaving_bus_before_final_stop;
+
 extern Facility glob_bus_facility[MAX_AMOUNT_OF_BUSES];
 
 extern Queue waitingForBusDispatch;

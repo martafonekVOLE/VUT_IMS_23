@@ -24,7 +24,7 @@ class BusDispatcher: public Event
         (new Bus())->Activate();
 
         Activate(Time + glob_time_between_bus_starts);
-        Print("\n[Time: [%f]]\tAutobus by měl nyní vyjet podle jízdního řádu.", Time);
+        Print("\n[Time: %f]\t\033[1;32mAutobus by měl nyní vyjet podle jízdního řádu.\033[0m", Time);
     }
 };
 
@@ -44,4 +44,18 @@ int main(int argc, char *argv[])
     (new BusDispatcher)->Activate();
 
     Run();
+
+    Print("\n\n========================================================= ");
+    Print("\nStatistics:\n");
+
+    if(glob_passenger_happiness < 0.0)
+    {
+        Print("\nPassenger happiness: \033[1;31m%f\033[0m", glob_passenger_happiness);
+    } else if (glob_passenger_happiness > 0.0) {
+        Print("\nPassenger happiness: \033[1;32m%f\033[0m", glob_passenger_happiness);
+    } else {
+        Print("\nPassenger happiness: %f", glob_passenger_happiness);
+    }
+
+    Print("\n");
 }

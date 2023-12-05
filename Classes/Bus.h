@@ -5,6 +5,10 @@
 #define DOPRAVA_BUS_H
 
 class Bus: public Process{
+private:
+    int capacity;
+    int peopleInBus = 0;
+
 public:
     Queue firstBusStopQueue;
 
@@ -21,7 +25,7 @@ public:
      * @param startStop
      * @param waitTimeStop
      */
-    explicit Bus(int startStop = -1, double waitTimeStop = 0, int spareFor = -1);
+    explicit Bus(int startStop = -1, double waitTimeStop = 0, int spareFor = -1, int people = 0);
 
     /**
      * Decide if bus can be dispatched or must be put in a queue
