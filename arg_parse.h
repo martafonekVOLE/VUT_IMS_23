@@ -18,9 +18,28 @@
 #define MAX_AMOUNT_OF_BUSES 100
 #define MAX_AMOUNT_OF_STOPS 100
 
+/**
+ * Constructor
+ */
 class arg_parse {
 
 };
+
+/**
+ * Global variables - declaration
+ */
+
+extern Facility glob_bus_facility[MAX_AMOUNT_OF_BUSES];
+
+extern Queue waitingForBusDispatch;
+
+extern Queue waitingForBusDispatchWithPriority;
+
+extern std::vector<Facility*> glob_bus_stops_vector;
+
+extern std::vector<Queue*> glob_bus_stop_queues_vector;
+
+extern Facility glob_bus_stops_facility[MAX_AMOUNT_OF_STOPS];
 
 // Global variable - end of sim time
 extern double glob_time_to;
@@ -49,18 +68,33 @@ extern double glob_time_between_bus_starts;
 // Global variable - how many buses can be in one station
 extern int glob_amount_of_bus_spots_on_bus_stop;
 
-extern Facility glob_bus_facility[MAX_AMOUNT_OF_BUSES];
+// Global variable - bus capacity
+extern int glob_bus_capacity;
 
-extern Queue waitingForBusDispatch;
+// Global variable - max amount of people on bus stop
+extern int glob_max_amount_of_people_waiting_for_bus;
 
-extern Queue waitingForBusDispatchWithPriority;
+// Global variable - max amount of people exiting bus
+extern int glob_max_amount_of_people_leaving_bus_before_final_stop;
 
-extern std::vector<Facility*> glob_bus_stops_vector;
+/**
+ * Statistic variables
+ */
+extern double glob_passenger_happiness;
 
-extern std::vector<Queue*> glob_bus_stop_queues_vector;
+extern int glob_amount_of_unsuccessfully_dispatched_buses;
 
-extern Facility glob_bus_stops_facility[MAX_AMOUNT_OF_STOPS];
+extern int glob_total_amount_of_dispatched_buses;
 
+extern std::vector<double> glob_time_spent_in_traffic_jam;
+
+extern int glob_max_bus_number_used;
+/**
+ * Handles argument parsing, sets global variables
+ *
+ * @param argc
+ * @param argv
+ */
 void arg_parse(int argc, char *argv[]);
 
 #endif //DOPRAVA_ARG_PARSE_H
