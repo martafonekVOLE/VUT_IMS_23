@@ -1,6 +1,19 @@
+/**
+ * @project Model logistiky - hromadná osobní přeprava, IMS
+ * @brief Implementation of Bus.h, implements bus behavior and random events
+ *
+ * @file Bus.cpp
+ * @date 21.11.2023
+ *
+ * @author Martin Pech (xpechm00)
+ * @author Josef Škorpík (xskorp07)
+ */
+
 #include "Bus.h"
 #include "../arg_parse.h"
 #include <cmath>
+#include <vector>
+#include <algorithm>
 
 /**
  * @inheritDoc
@@ -18,6 +31,14 @@ Bus::Bus(int startStop, double waitTimeStop, int spareFor, int people)
         peopleInBus = people;
         Print("\n[Time: %f]\tNáhradní autobus vyřáží do zastávky [%d]. Cesta mu zabere [%f].", Time, startStop+1, waitTimeStop);
     }
+    else
+    {
+        SetActualBusOrPutProcessInQueue();
+        if(shouldBeQueued)
+        {
+            glob_amount_of_unsuccessfully_dispatched_buses++;
+        }
+    }
 }
 
 /**
@@ -29,6 +50,8 @@ void Bus::SetActualBusOrPutProcessInQueue()
     for (int i = 0; i < glob_amount_of_buses; i++) {
         if (! glob_bus_facility[i].Busy()) {
             actualBus = i;
+            glob_max_bus_number_used = actualBus > glob_max_bus_number_used ? actualBus : glob_max_bus_number_used;
+
             shouldBeQueued = false;
             break;
         }
@@ -43,7 +66,6 @@ void Bus::BusMovement()
     int currentBusStop = startBusStop;
 
     if(isSpareBus){
-        // todo exponential as global and separate
         Wait(waitTimeToFirstStop);
         Print("\n[Time: %f]\tAutobus číslo [%d] přeložil cestující a není ho již možné použít.", Time, spareBusFor + 1);
     }
@@ -56,14 +78,20 @@ void Bus::BusMovement()
         DecideAboutTrafficJam();
 
         // If bus is replacement bus, it will take some time to reach accident site
-        double waitTime = (waitTimeToFirstStop != 0.0) ? waitTimeToFirstStop : Normal(glob_time_between_stops, 3);
-        Wait(waitTime);
-        waitTimeToFirstStop = 0.0;
+        if(! isSpareBus)
+        {
+            double waitTime = (waitTimeToFirstStop != 0.0) ? waitTimeToFirstStop : Normal(glob_time_between_stops, 3);
+            Wait(waitTime);
+            waitTimeToFirstStop = 0.0;
+        }
+        else
+        {
+            isSpareBus = false;
+        }
 
         HandleBusStop(currentBusStop);
 
         // Accident happened at bus stop exit
-        // todo disable accident atz last stop
         if(AccidentOccurred(currentBusStop))
         {
             return;
@@ -139,6 +167,7 @@ void Bus::DecideAboutTrafficJam()
         double waitTime = Exponential(glob_traffic_jam_wait_time);
 
         Print("\n[Time: %f]\t\033[1;33mAutobus číslo [%d] se dostal do zácpy a zdrží se [%f].\033[0m", Time, (actualBus + 1), waitTime);
+        glob_time_spent_in_traffic_jam.push_back(waitTime);
         Wait(waitTime);
 
         for (int i = 0; i < peopleInBus; ++i) {
@@ -152,6 +181,11 @@ void Bus::DecideAboutTrafficJam()
  */
 bool Bus::AccidentOccurred(int currentBusStop)
 {
+    if(currentBusStop + 1 == glob_amount_of_bus_stops)
+    {
+        return false;
+    }
+
     if(Random() <= (glob_accident_rate / 100.0))
     {
         (new Accident(actualBus, currentBusStop, peopleInBus))->Activate();

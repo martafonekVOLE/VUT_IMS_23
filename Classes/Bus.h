@@ -1,3 +1,14 @@
+/**
+ * @project Model logistiky - hromadná osobní přeprava, IMS
+ * @brief Header file, contains declaration
+ *
+ * @file Bus.h
+ * @date 21.11.2023
+ *
+ * @author Martin Pech (xpechm00)
+ * @author Josef Škorpík (xskorp07)
+ */
+
 #include <simlib.h>
 #include "Accident.h"
 
@@ -38,7 +49,7 @@ public:
     void BusMovement();
 
     /**
-     *
+     * Does handle bus stop
      */
     void HandleBusStop(int currentBusStop);
 

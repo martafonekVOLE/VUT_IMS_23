@@ -1,8 +1,18 @@
+/**
+ * @project Model logistiky - hromadná osobní přeprava, IMS
+ * @brief Header file, contains declarations
+ *
+ * @file Accident.h
+ * @date 21.11.2023
+ *
+ * @author Martin Pech (xpechm00)
+ * @author Josef Škorpík (xskorp07)
+ */
+
 #include <simlib.h>
 
 #ifndef DOPRAVA_ACCIDENT_H
 #define DOPRAVA_ACCIDENT_H
-
 
 class Accident: public Process
 {

@@ -1,3 +1,14 @@
+/**
+ * @project Model logistiky - hromadná osobní přeprava, IMS
+ * @brief Implementation of Accident.h, implements behavior on accident
+ *
+ * @file Accident.cpp
+ * @date 21.11.2023
+ *
+ * @author Martin Pech (xpechm00)
+ * @author Josef Škorpík (xskorp07)
+ */
+
 #include "Accident.h"
 #include "../arg_parse.h"
 #include "Bus.h"
