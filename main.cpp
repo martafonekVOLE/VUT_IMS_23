@@ -57,8 +57,7 @@ void printStatistics() {
         Print("\nPassenger happiness: Average");
     }
 
-    Print("\nAverage time in traffic jam: %f", totalTimeInTrafficJam <= 0 ? 0 : totalTimeInTrafficJam /
-                                                                                static_cast<double>(glob_time_spent_in_traffic_jam.size()));
+    Print("\nAverage time in traffic jam: %f", totalTimeInTrafficJam <= 0 ? 0 : totalTimeInTrafficJam / (double)(glob_total_amount_of_dispatched_buses - glob_amount_of_unsuccessfully_dispatched_buses));
     Print("\n\nModel output: ");
     Print("\n================================================================================\n");
     // There is high amount of unused buses, but people are happy
