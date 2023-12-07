@@ -28,6 +28,7 @@ const char TRAFFIC_JAM_RATE = 'j';
 const char BUS_CAPACITY = 'c';
 const char MAX_AMOUNT_OF_PEOPLE_GETTING_IN = 'i';
 const char MAX_AMOUNT_OF_PEOPLE_GETTING_OUT = 'o';
+const char RANDOM_SEED = 'r';
 
 /**
  * Global variables initialization
@@ -71,6 +72,8 @@ int glob_max_amount_of_people_waiting_for_bus = 15;
 
 int glob_max_amount_of_people_leaving_bus_before_final_stop = 5;
 
+int glob_enable_random_seed = 0;
+
 /**
  * Global variables - statistics
  */
@@ -90,7 +93,7 @@ int glob_max_bus_number_used = 0;
 void arg_parse(int argc, char *argv[]) {
     int option = 0;
 
-    while ((option = getopt(argc, argv, "t:a:b:s:l:g:w:c:i:o:j:")) != -1)
+    while ((option = getopt(argc, argv, "t:a:b:s:l:g:w:c:i:o:j:r:")) != -1)
     {
         switch (option) {
             case TIME:
@@ -233,6 +236,19 @@ void arg_parse(int argc, char *argv[]) {
                 }
 
                 glob_traffic_jam_rate = newRate;
+                break;
+            }
+
+            case RANDOM_SEED:
+            {
+                int random_seed_enabled = std::stoi(optarg);
+                if(random_seed_enabled > 1 || random_seed_enabled < 0)
+                {
+                    std::cerr << "Argument RANDOM_SEED_ENABLED vyžaduje číslo 1, nebo 0 reprezentující hodnoty true a false." << std::endl;
+                    exit(1);
+                }
+
+                glob_enable_random_seed = std::stoi(optarg);
                 break;
             }
         }

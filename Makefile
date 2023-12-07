@@ -1,11 +1,15 @@
 CC = g++
 CFLAGS = -g -O2
 PROJECT = doprava
-OBJECTS = main.cpp arg_parse.cpp
-CLASSES = Classes
+FILES = main.cpp arg_parse.cpp
+CLASSES = Classes/*.cpp
+FLAGS = -lsimlib -lm -std=c++1z -Wall -Wextra -Wpedantic
 
-$(PROJECT): $(OBJECTS)
-	$(CC) $(CFLAGS) -o $(PROJECT) $(OBJECTS) $(CLASSES)/*.cpp -lsimlib -lm
+all:
+	$(CC) $(CFLAGS) -o $(PROJECT) $(FILES) $(CLASSES) $(FLAGS)
+
+run:
+	./$(PROJECT)
 
 clean:
 	rm $(PROJECT) $(PROJECT).o arg_parse.o

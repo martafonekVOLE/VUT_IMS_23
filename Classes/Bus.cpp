@@ -64,13 +64,12 @@ void Bus::SetActualBusOrPutProcessInQueue()
 void Bus::BusMovement()
 {
     int currentBusStop = startBusStop;
-
     if(isSpareBus){
         Wait(waitTimeToFirstStop);
         Print("\n[Time: %f]\tAutobus číslo [%d] přeložil cestující a není ho již možné použít.", Time, spareBusFor + 1);
     }
 
-    while(currentBusStop < (glob_amount_of_bus_stops - 1))
+    while(currentBusStop < (glob_amount_of_bus_stops))
     {
         Print("\n[Time: %f]\tAutobus číslo [%d] vyřáží do další zastávky.", Time, (actualBus + 1));
 
@@ -100,11 +99,12 @@ void Bus::BusMovement()
         currentBusStop += 1;
     }
 
-    for (int i = 0; i < peopleInBus; i++) {
-        glob_passenger_happiness += round(Uniform(1, 3));
-    }
-
     Print("\n[Time: %f]\tAutobus číslo [%d] dokončil linku a vrací se zpět.", Time, (actualBus + 1));
+    for (int i = 0; i < currentBusStop; i++) {
+        Wait(Normal(glob_time_between_stops, 3));
+    }
+    Print("\n[Time: %f]\tAutobus číslo [%d] je připraven k použití.", Time, (actualBus + 1));
+
     Release(glob_bus_facility[actualBus]);
 }
 
@@ -126,6 +126,18 @@ void Bus::HandleBusStop(int currentBusStop)
         }
 
         int peopleWaitingForBus = round(Uniform(0, glob_max_amount_of_people_waiting_for_bus));
+
+        if(!busOnTime)
+        {
+            for (int i = 0; i < peopleWaitingForBus; i++) {
+                glob_passenger_happiness -= round(Uniform(1, 2));
+            }
+        }
+        else
+        {
+            glob_passenger_happiness += round(Uniform(1, 2));
+        }
+
         if (capacity >= (peopleInBus + peopleWaitingForBus))
         {
             peopleInBus += peopleWaitingForBus;
@@ -170,7 +182,7 @@ void Bus::DecideAboutTrafficJam()
         glob_time_spent_in_traffic_jam.push_back(waitTime);
         Wait(waitTime);
 
-        for (int i = 0; i < peopleInBus; ++i) {
+        for (int i = 0; i < peopleInBus; i++) {
             glob_passenger_happiness -= round(Uniform(0, 1));
         }
     }
@@ -208,6 +220,7 @@ void Bus::Behavior()
             waitingForBusDispatch.Insert(this);
         }
         Print("\n[Time: %f]\t\033[1;35mPožadavek na vyslání autobusu byl zařazen do fronty.\033[0m", Time);
+        busOnTime = false;
         Passivate();
 
         for (int i = 0; i < glob_amount_of_bus_stops * round(Uniform(0,glob_max_amount_of_people_waiting_for_bus)); i++) {
@@ -229,6 +242,7 @@ void Bus::Behavior()
         (waitingForBusDispatchWithPriority.GetFirst())->Activate();
     }
 
+    // Activate Classic Waiting Bus
     if (waitingForBusDispatch.Length() > 0)
     {
         (waitingForBusDispatch.GetFirst())->Activate();

@@ -77,6 +77,9 @@ extern int glob_max_amount_of_people_waiting_for_bus;
 // Global variable - max amount of people exiting bus
 extern int glob_max_amount_of_people_leaving_bus_before_final_stop;
 
+// Global variable - enables randomization of event
+extern int glob_enable_random_seed;
+
 /**
  * Statistic variables
  */
