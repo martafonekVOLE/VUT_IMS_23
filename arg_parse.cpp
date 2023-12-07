@@ -50,27 +50,27 @@ Queue waitingForBusDispatchWithPriority;
  * Global variables - arguments
  */
 
-double glob_time_to = 300;
+double glob_time_to = 6000.0;
 
 double glob_accident_rate = 0.00471;
 
-double glob_traffic_jam_rate = 0.2;
+double glob_traffic_jam_rate = 5.0;
 
-double glob_traffic_jam_wait_time = 10.0;
+double glob_traffic_jam_wait_time = 300.0;
 
-int glob_amount_of_buses = 5;
+int glob_amount_of_buses = 2;
 
-int glob_amount_of_bus_stops = 5;
+int glob_amount_of_bus_stops = 7;
 
-double glob_time_between_stops = 15.0;
+double glob_time_between_stops = 78.0;
 
-double glob_time_between_bus_starts = 30.0;
+double glob_time_between_bus_starts = 675.0;
 
 int glob_bus_capacity = 75;
 
-int glob_max_amount_of_people_waiting_for_bus = 15;
+int glob_max_amount_of_people_waiting_for_bus = 4;
 
-int glob_max_amount_of_people_leaving_bus_before_final_stop = 5;
+int glob_max_amount_of_people_leaving_bus_before_final_stop = 4;
 
 int glob_enable_random_seed = 0;
 
