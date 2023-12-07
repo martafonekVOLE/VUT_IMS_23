@@ -90,8 +90,13 @@ void printStatistics() {
  */
 int main(int argc, char *argv[])
 {
+
     // Parsing arguments
     arg_parse(argc, argv);
+
+    if(glob_enable_random_seed) {
+        RandomSeed(time(NULL));
+    }
 
     Init(0, glob_time_to);
     (new BusDispatcher)->Activate();
