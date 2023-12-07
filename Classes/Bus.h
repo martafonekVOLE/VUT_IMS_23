@@ -19,6 +19,7 @@ class Bus: public Process{
 private:
     int capacity;
     int peopleInBus = 0;
+    bool busOnTime = true;
 
 public:
     Queue firstBusStopQueue;
