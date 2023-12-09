@@ -5,6 +5,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{outlines}
 \usepackage[hidelinks]{hyperref}
+\usepackage{csquotes}
 
 \usepackage[left=1.5cm, text={18cm, 26cm}, top=1.8cm]{geometry}
 
@@ -55,70 +56,99 @@
     \label{sec:intro}
 
     Tématem projektu je implementace abstraktního modelu~\cite[snímek 10]{IMS_slides} autobusové linky.
-    Projekt vznikl jako zápočtová práce do předmětu Modelování a simulace. Chování modelu bylo demonstrováno na základě existující Jihomoravské autobusové linky číslo 501. Tento model si klade za cíl najít optimální počet autobusů, které je potřeba rezerovovat pro danou linku tak, aby nedocházelo k dlouhému čekání a najít optimální jízdní řád na základě zadaných parametrů o hustotě provozu. Optimální počet autobusů i jízdní řád hledáme podle spokojenosti cestujících, která je ovlivněna tím, jestli přijedou do cílové stanice včas, nebo se zpožděním. Jelikož je tento simulační model~\cite[snímek 44]{IMS_slides} zacílen pouze na tyto konkrétní cíle, uvažuje pouze takové jevy, které přímo ovlivňují chování modelu. Tyto jevy jsou popsány v kapitole ~\ref{subsec:conceptual_model_description}.
+    Projekt vznikl jako zápočtová práce do předmětu Modelování a simulace. Chování modelu bylo demonstrováno a validováno na základě existující Jihomoravské autobusové linky číslo 501. Tento model si klade za cíl najít optimální počet autobusů, které je potřeba rezerovovat pro danou linku tak, aby nedocházelo k dlouhému čekání a najít optimální jízdní řád na základě zadaných parametrů o hustotě provozu a struktuře dané autobusové linky. Optimální počet autobusů i jízdní řád je vyhodnocován podle spokojenosti cestujících, která je ovlivněna několika faktory. Jelikož je tento simulační model~\cite[snímek 44]{IMS_slides} zacílen pouze na výše uvedené cíle, připouští výskyt pouze takových jevů, které přímo ovlivňují jeho chování. Tyto jevy jsou popsány v kapitole~\ref{subsec:conceptual_model_description}.
 
         \subsection{Autoři a~původ faktů}
         \label{subsec:authors}
 
             Na implementaci projektu a~tvorbě technické zprávy spolupracovali studenti Fakulty informačních technologií Vysokého učení technického v~Brně, Martin Pech a~Josef Škorpík.
             
-            Údaje o počtu zastávek, průměrné době mezi zastávkami a intervalech mezi výjezdy autobusů, které byly použity pro výchozí nastavení modelu vycházejí z veřejně přístupných jízdních řádů uveřejněných na webu Integrovaného dopravního systému Jihomoravského kraje\cite{Jizdni_rad}. 
-            Pravděpodobnost výskytu dopravní nehody byla spočítána na základě veřejně dostupných statistik pro rok 2020, které každoročně uveřejňuje Policie České republiky a podle informací poskytnutých Ministerstevm dopravy České republiky k říjnu roku 2020\cite{Accident_statistics}. Pro výpočet této hodnoty bylo uvažováno následujících faktů:
+            Údaje o počtu zastávek, průměrné době mezi zastávkami a intervalech mezi výjezdy autobusů, které byly použity pro výchozí nastavení modelu, vychází z veřejně přístupných jízdních řádů uveřejněných na webu Integrovaného dopravního systému Jihomoravského kraje \cite{Jizdni_rad}. 
+            Pravděpodobnost výskytu dopravní nehody byla spočítána na základě veřejně dostupných statistik pro rok 2020, které každoročně uveřejňuje Policie České republiky a podle informací poskytnutých Ministerstevm dopravy České republiky k říjnu roku 2020 \cite{Accident_statistics}. Z těchto informací je možná získat následující data pro rok 2020:
             \begin{outline}
             	\1 Počet platných řidičských průkazů: \textbf{6 002 348}
-            	\1 Počet dopravních nehod: \textbf{94 797}
-            	\2 Z toho počet dopravních nehod s jedoucím nekolejovým vozidlem: \textbf{28 333}
+            	\1 Počet dopravních nehod: \textbf{94 797}, z toho počet dopravních nehod s jedoucím nekolejovým vozidlem: \textbf{28 333}
             \end{outline}
             
-            Pro výpočet cílové pravděpodobnosti bylo dále uvažováno, že se žádná osoba neúčastnila nehody vícekrát. Výsledná pravděpodobnost se tedy rovná přibližně \textbf{1 : 212}, což odpovídá cca \textbf{0.0047\%}.
+            Pro výpočet pravděpodobnosti dopravní nehody bylo dále pro jednoduchost uvažováno, že se žádná osoba neúčastnila více než jedné nehody. Výsledná pravděpodobnost se na základě těchto dat dá spočítat jako podíl počtu řidičských oprávnění a počtu nehod. Výsledná hodnota je rovna přibližně \textbf{1 : 212}, tedy \textbf{0.0047\%}.
             
-            Výchozí údaje o dopravní zácpě byly zjištěny experimentálně. Vybrali jsme si linku č. 501, jelikož s ní má jeden z~řešitelů (Martin Pech) mnoho zkušeností. Od 10.09.2023, kdy jsme projekt začali řešit, jel celkově touto linkou 60 krát tam a 60 krát zpět. Tudíž za tři měsíce s ní jel celkově 120x. Z toho 80x jel v čas, který považujeme za dopravní špičku a 40x v čase, který nepovažujeme za dopravní špičku. Data ohledně dopravní zácpy jsme tedy získali experimentálně. Pokud se nejedná o čas dopravní špičky, průměrně se autobus dostal do dopravní zácpy v 5\% a to způsobilo zpoždění průměrně 5 minut. Pokud se autobus do dopravní zácpy nedostal, došlo maximálně k tak malému zpoždění, které zanedbáváme (zanedbáváme zpoždění, které nepřesáhne 2 minuty). \\
-            Určení pravděpodobnosti zácpy ve špičce bylo spočítáno na základě pokusu, tedy skutečného ježdění danou linkou. V době kdy ještě neexistoval vylukový jízdní řád, nastávala dopravní zácpa vždy na jedná konkrétní zastávce. Jelikož se jednalo o jednu z 7, pravděpodobnost výskytu tohoto jevu by se dala popsat jako 1/7. Průměrná doba v této zácpy se pohybuje okolo 17 minut.\\
-            Dále bylo třeba zjistit, kolik bude průměrně cestujících na jednotlivých autobusových zastávkách. Vycházíme ze statistik\cite{Pocet_cestujicich}, uvedených na portálu wikipedie.org. V roce 2022 provozoval Dopravní podnik města Brna 328 autobusů určených pro městskou osobní dopravu. Tyto autobusy v roce 2022 přepravily 111.7 milionů cestujících. \\
-            Z toho jsme spočítali, že jeden autobus převeze průměrně 39 lidí za hodinu. Naše trasa linky č. 501 trvá 21 minut, za které tedy autobus převeze průměrně 13 lidí. Jelikož je na lince 7 zastávek, počítáme s tím, že průměrně budou na každé zastávce 2 lidi. Tyto statistiky vychází z celoročních dat, tudíž zde počítáme jak spoje v dopravní špičce, tak např. noční spoje, ve kterých bude nejspíše méně lidí. Jedná se tedy o čistý průměr, ale můžeme předpokládat, že pokud budeme uvažovat čas dopravní špičky, počet cestujících bude větší.
+            Výchozí údaje o dopravní zácpě byly zjištěny experimentálně. Na trase linky 501 momentálně dochází mezi zastávkami Ořechovská a Ústřední hřbitov k rekonstrukci dálničního nájezdu, což má za následek každodenní mnohakilometrové kolony vozidel mířících na dálnici D1 směrem od Vídně. Tyto dopravní komplikace ovlivňují i vybranou autobusovou linku. Jeden z řešitelů (Martin Pech) jezdí denně osobním automobilem po trase linky 501. Při čekání zapisoval dobu takto strávenou.
+            Z údajů získaných o dopravě v tomto úseku od počátku října do konce listopadu v době dopravní špičky bylo následně zjištěno, že k zácpě došlo pokaždé průměrná doba čekání, ke kterému docházelo, byla vypočtena jako \textbf{17 minut}.
+            
+            Mimo tento úsek dané linky byly hodnoty zpoždění pouze zanedbatelné a to jak ve špičce, tak mimo ni. Díky tomu bylo možné jedoduše určit výchozí pravděpodobnost výskytu zácpy. Pravděpodobnost výskytu zácpy při špičce je tedy možné vyjádřit jako poměr problémového úseku vůči celkovému počtu úseků. Výsledná pravděpodobnost je tedy \textbf{$\frac{1}{7}$}. 
+            
+            Pro určení průměrného počtu cestujícíh na zastávkách bylo využito statistik \cite{Pocet_cestujicich} uvedených na portálu wikipedie.org. Podle tohoto zdroje provozoval v roce 2022 Dopravní podnik města Brna 328 autobusů určených pro městskou osobní dopravu. Tyto autobusy v roce 2022 přepravily 111.7 milionů cestujících. 
+            
+            Z těchto údajů vyplývá, že jeden autobus převeze průměrně 39 lidí za hodinu. Trasa linky číslo 501 trvá ve vybraném úseku 9 minut a jede průměrně 3x za hodinu. Během jedné jízdy autobus převeze průměrně 13 lidí. 
+            Po rozpočítání tohoto počtu mezi 7 zastávek, zůstavají průměrně 2 lidi na zastávku.
+            Tato statistika vychází z celoročních dat, tudíž jsou zde počítány jak spoje v dopravní špičce, tak i noční spoje, kde je nízké vytížení. Tento vypočtený údaj je pro daný model nedostatečný, ale nebylo možné vyhledat lepší údaje. Ze zkušenosti jednoho z řešitelů je ale průměrný počet lidí na zastávce mnohem vyšší, zejména ve špičce.
 
         \subsection{Validace výstupů}
         \label{subsec:validation}
-        V této práci provedeme několik experimentů (popsané v kapitole \ref{sec:simulation}) a výsledky těchto experimentů budeme validovat tak, že porovnáme data, které z experimentu budou vyplývat, s daty, které jsou obsaženy v jízdním řádě. Pokud nasimulujeme existující linku hromadné dopravy a náš model usoudí, že cestující jsou při používání této linky spokojeni, pak není třeba jízdní řád dané linky měnit. Pokud by cestující byli nespokojeni, je třeba experimentovat s proměnnýma (např. s počtem autobusů, které jezdí na dané lince), abychom byli schopni optimalizovat jízdní řád a najít ten ideální.
+        V rámci validace výstupů bylo provedeno několik experimentů (popsané v kapitole \ref{sec:simulation}) a výsledky těchto experimentů byly validovány s daty z původního jízdního řádu a nového, výlukového jízdního řádu, který Integrovaný dopravní systém vytvořil v reakci na situace mezi zastávkami Ořechovská a Ústřední hřbitov. 
 	
 \newpage
     \section{Rozbor tématu a~použitých metod/technologií}
     \label{sec:methods}
-        Autobusová linka, kterou jsme se rozhodli modelovat, je linka č.~501. Popis této linky mimo dopravní špičku odpovídá defaultnímu nastavení naší simulace. Autobusy jezdí z Ústředního hřbitova do Ořechova. Linka má 7 autobusových zastávek a celková doba jízdy autobusu po této lince (bez zpoždění) je 21 minut. Naše simulace běží v čase, který odpovídá sekundám, tudíž to odpovídá 1260 sekundám. Šance na to, že autobus havaruje je 0.0047\%. V takovém případě vyšleme náhradní autobus, který převezme všechny cestující z havarovaného autobusu a pokračuje dál na lince. Počítáme s tím, že průměrně na každé zastávce budou 2 lidé. Obecně ale platí, že se cestující generují rovnoměrným rozložením, daným intervalem <0, x>, kde x si můžeme nastavit přepínačem \texttt{-i}. Stejně pak pracujeme s počtem cestujících, kteří vysednou na zastávce. Počet cestujících, kteří vysedají na zastávce je dán rovnoměrným rozložením s intervalem <0,y>, kde y je možné si nastavit parametrem \texttt{-o}. Ze statistik (uvedeno v \ref{subsec:authors}) vyplývá, že průměrně do autobusu na zastávce vstoupí 2 lide. Počítáme i s tím, že průměrně 2 lidé z autobusu odejdou. Takže defaultní hodnota pro proměnné x,y je~4. Průměrně naložení a vyložení cestujících trvá 90s (1.5 minuty). Průměrný čas mezi jednotlivými zastávkami na této lince je 78 sekund (1.3 minuty). Nový autobus vyjíždí na linku každých 675 sekund, tedy každých 11.25 minut. Celkem na tuto linku máme 2 autobusy a každý z nich má kapacitu 75 míst. Budeme tedy zkoumat, jaký je optimální počet autobusů pro danou linku. Rozhodování toho, co je optimální, stojí hlavně na spokojenosti cestujících. Pokud cestující dojedou včas, jsou spokojení. Pokud se autobus, ve kterém jedou, dostane do havárie, nebo se dostanou do zácpy a přijedou pozdě, ovlivní to spokojenost v negativním smyslu. Náš nástroj také sleduje využitelnost autobusů. Pokud si na linku rezervujeme 8 autobusů, ale 5 z nich nevyužijeme, je to ekonomicky neúnosné.\\
-        Důležité je zmínit, že náš nástroj sice defaultně simuluje autobusovou linku č. 501 mimo dopravní špičku, ale všechny proměnné můžeme nastavit pomocí parametrů (popsáno v \ref{subsec:start}). Tudíž je použitelný na jakoukoliv linku hromadné dopravy , u které bychom chtěli zoptimalizovat jízdní řád, nebo se ujistit, že jízdní řád je navržen správně.
+   		Tento model hromadné osobní přepravy se zaměřuje na nalezení optimálního jízdního řádu autobusové linky. Model vyhodnocuje vstupní parametry, ze kterých určuje výsledky. Výstupy modelu jsou určovány na základě spokojenosti pasažérů. Spokojenost pasažérů je určována na základě běžných situací, jako například čekání v koloně, opožděný a včasný příjezd, nebo situace, kdy je autobus přeplněný a nemohou do něj nastoupit další lidé. Pro určení míry spokojenosti a nespokojenost jednotlivých aspektů bylo využito dotazníkového šetření. Dotazovaní měli za úkol určit míru spokojenosti a nespokojenosti u každého z použitých aspektů. Po zprůměrování všech výsledků je spokojenost ovlivňována následujícími aspekty s následující váhou (za každého jednoho pasažéra, kterého se situace týká): 
+   		
+         \begin{table}[H]
+   			\centering
+   			\resizebox{\textwidth}{!}{
+   				\begin{tabular}{ | c | c | c | c | c | c | c | c| }
+   					\hline
+   					Spožděný přijezd autobusu & Včasný příjezd autobusů &  Přeplněný autobus & Čekání v dopravní zácpě & Opožděný příjezd autobusu do zastávky & Dopravní nehoda \\
+   					\hline
+   					\hline
+   					-1/-2 & +1/+2 & -1/-2 & 0/-1 & 0/-1 & -3 \\
+   					\hline
+   				\end{tabular}
+   			}
+   			\caption{Ovlivnění celkové spokojenosti v závislosti na daném jevu (za každého jednoho pasažéra)}
+   			\label{}
+   		\end{table}
+   		
+     	Po nasimulování autobusové linky s konkrétními parametry je uživatel obeznámen s výsledkem. Pokud je výsledek spokojenosti pasažérů nadprůměrný, znamená to, že by takovýto jízdní řád za daných podmínek mohl fungovat. Model dále dokáže indikovat situaci, kdy je na ince použitý nesprávny počet autobusů, což může vést k ekonomické neúnosnosti, nebo jsou intervaly mezi výjezdy autobusů příliš (málo) četné. Dále dokáže určit taková nastavení, která by v reálu zřejmě neobstála.
+   		
+   		Výchozí nastavení modelu odpovídá autobusové lince 501. Pomocí jízdního řádu této linky byl následně model validován. 
+ 		Model uvažuje všechny autobusové zastávky od Ústředního hřbitova po Nebovidy, dolní konec. V tomto úseku je 7 autobusových zastávek a celková doba jízdy autobusu po této trase (bez zpoždění) je 9 minut. Simulační čas odpovídá sekundám reálného času. 
+ 		
+ 		Chování modelu je takové, že po pevně daných časových intervalech vyjíždí z úvodní zastávky autobus a projíždí všechny zastávky na lince. Mezi všemi zastávkami na lince existuje šance, že se autobus dostane do dopravní zácpy, v důsledku čehož se opozdí. To může mít negativní dopad na schopnost autobusu vyjet na novou linku podle jízdního řádu, čímž může negativně ovlivňovat spokojenost pasažérů. Pokud autobus přijede k zastávce, existuje možnost, že se v zastávce vyskytuje už nějaký jiný autobus. V takovém případě se autobus zařadí do fronty za zastávku. V opačném případě zabere zastávku a započně výstup a nástup cestujících. Pokud je kapacita autobusu zaplněna, nejsou další cestující vpuštěni do autobusu, což znovu negativně ovlivňuje jejich spokojenost. Po dokončení zastávky se autobus vrací na silnici. V tomto momentě hrozí riziko nedání přednosti v jízdě ze strany řidičů a s šancí 0.0047\% může dojít k nehodě.
+ 		V takovém případě se na linku vysílá náhradní autobus, který převezme všechny cestující z havarovaného autobusu a pokračuje dál na lince. 
+ 		
+ 		Z výše posaných dat vyplývá, že se průměrně na každé zastávce vyskytují 2 lidé. Obdobně uvažujeme i počet vystupujících. Obecně ale platí, že se cestující generují s rovnoměrným rozložením, daným intervalem <0, x>, kde x si může uživatel nastavit přepínačem jak pro nástup, tak pro výstup. Stejně se pak pracuje s počtem cestujících, kteří vysednou na zastávce. Výjimkou je poslední zastávka, kde se implicitně uvažuje výstup všech cestujících. Výchozí hodnota je pro oba případy $x = 4$.
+ 		Průměrně naložení a vyložení cestujících trvá 90s (1.5 minuty). Průměrný čas mezi jednotlivými zastávkami na této lince je 78 sekund (1.3 minuty). 
+ 		Ve výchozím nastavení vyjíždí nový autobus každých 675 sekund, tedy každých 11.25 minut a k dispozici jsou dva autobusy s kapacitou kapacitu 75 míst. Všechny v této kapitole popsané parametry lze modifikovat pomocí argumentů příkazové řádky při spouštění modelu.
+     
         \subsection{Popis použitých postupů}
         \label{subsec:methods}
 
             K vytvoření základní koncepce projektu jsme využili deklarativních modelů~\cite[snímek 49]{IMS_slides}, konkrétně Petriho sítě~\cite[snímek 123]{IMS_slides} vyobrazené níže.
-            Pomocí Petriho sítí byla vytvořena obslužná linka simulující chování linky hromadné dopravy. Pro implementaci jsme si zvolili jazyk C++, jelikož je velmi dobře využitelný v případech, kdy je nutný vysoký výkon. Proto je to ideální volba právě pro tvorbu simulací, které mohou být výpočetně náročné. Pro účely modelování využíváme knihovnu SIMLIB \footnote{\url{https://www.fit.vutbr.cz/~peringer/SIMLIB/}} ve verzi 3.09. Pro sestavení projektu jsme použili GNU Make \footnote{\url{https://www.gnu.org/software/make/}}. Nástroj i knihovna jsou volně dostupné a jsou distribuovány pod svobodnou licencí softwaru.
+            Pomocí Petriho sítí byl vytvořen model obslužné linka simulující chování linky hromadné osobní přepravy. Model byl vytvořen za pomoci progamovacího jazyka C++, jelikož je velmi dobře využitelný v případech, kdy je nutný vysoký výkon. Proto je ideální volbou právě pro tvorbu simulací, které mohou být výpočetně náročné. Pro účely modelování je využito knihovnu SIMLIB \footnote{\url{https://www.fit.vutbr.cz/~peringer/SIMLIB/}} ve verzi 3.09 a pro sestavení projektu nástroje GNU Make \footnote{\url{https://www.gnu.org/software/make/}}. Nástroj i knihovna jsou volně dostupné a jsou distribuovány pod svobodnou licencí softwaru.
             
-
         \subsection{Popis původu použitých metod/technologií}
         \label{subsec:techology}
 
-            Jak již bylo zmíněno, pro implementaci byl použit jazyk C++ v~kombinaci s~knihovnou SIMLIB ve verzi 3.09. S~pomocí tohoto jazyka
-            bylo přistupováno k~rozhraní knihovny SIMLIB, pomocí kterého byly vytvořeny předpisy pro všechny komponenty potřebné k~simulaci.
-            Pro sestavení programu byl použit GNU Make.
+			S~pomocí jazyka C++ bylo přistupováno k~rozhraní knihovny SIMLIB, pomocí kterého byly vytvořeny předpisy pro všechny komponenty potřebné k~simulaci. Díky principům jazyka C++ bylo možné využít objektově orientovaného programování. Proces autobusu byl implementován ve třídě Bus a proces dopravní nehody ve třídě Accident.
 
     \section{Koncepce modelu}
     \label{sec:concept}
 
         Konceptuální model~\cite[snímek 48]{IMS_slides} je koncipován jako systém hromadné obsluhy~\cite[snímek 136]{IMS_slides}.
-        Pracuje se dvěmi obslužnými linkami. První je autobus s defaultní kapacitou 75, a druhá je autobusová zastávka. Simlujeme sice autobusovou linku s číslem 501, ale model se dá použít na modelování libovolné linky hromadné dopravy. Takže se náš model neomezuje na počet autobusových zastávek linky 501, či na předem daný počet autobusů. Další činitelé v našem modelu jsou dopravní zácpy a havárie. Pokud by autobus havaroval, bude vyslán další autobus, který dojede na místo havárie, převezme cestující z havarovaného autobusu a pokračuje dál předem danou trasou.
+        V modelu se pracuje s obslužnou linkou autobusu, která zpracovává příchozí požadavky na výjezd autobusu dle jízdního řádu. Dále v modelu existuje dynamický počet linek reprezentující autobusové zastávky. Počet zastávek volí uživatel při spouštění programu. Díky tomu, že se tento model neomezuje na počet autobusových zastávek, či na předem daný počet autobusů, je možné ho použít k modelování libovolné linky. V modelu se dále vyskytuje dispečer, který je implementován jako generátor z knihovny Simlib.
 
         \subsection{Popis konceptuálního modelu}
         \label{subsec:conceptual_model_description}
-            Do modelu vstupují jednotlivé autobusy v intervalu daným tím, jakou linku modelujeme (lze nastavit parametrem~\texttt{-s}).
-            V čas výjezdu autobus vyjíždí na první autobusovou zastávku. Na zastávce nabírá cestující. Mohou nastat dvě komplikace. Autobus může havarovat, tudíž systém vyšle nový autobus na místo havárie a převezme cestující. Poté pokračuje v dané lince. Nebo se autobus může dostat do dopravní zácpy. Výstupem modelu je spokojenost cestujících. Spokojenost je ovlivněna časem příjezdu do cílové destinace. Pokud cestující přijede bez komplikací a včas, dá se říct, že se službou dané linky byl spokojený. Pokud se dostane do havárky nebo dopravní zácpy, autobus přijede se zpožděním a můžeme očekávat, že cestující nebude se službou spokojen.
+            Do modelu vstupují jednotlivé autobusy v pevně daných intervalech. 
+            V čas výjezdu vyjíždí autobus na první zastávku. Na zastávce nabírá cestující. Mohou nastat dvě komplikace. Autobus může havarovat, na základě čehož vyšle systém nový autobus na místo havárie a převezme cestující. Poté pokračuje v dané lince namísto původního autobusu. Druhou komplikací je dopravní zácpa, do které se autobus může dostat. Výstupem modelu je spokojenost cestujících. Spokojenost je ovlivněna časem příjezdu do cílové destinace a dalšími faktory. Pokud cestující přijede bez komplikací a včas, dá se říct, že se službou dané linky byl spokojený. Pokud se dostane do havárky nebo dopravní zácpy, autobus přijede se zpožděním a můžeme očekávat, že cestující nebude se službou spokojen.
             
-\newpage
         \subsection{Forma konceptuálního modelu}
         \label{subsec:conceptual_model}
 
-            Model je reprezentován touto Petriho sítí:
+            Model je reprezentován následující Petriho sítí.
 
             \begin{figure}[H]
-                \includegraphics[scale=0.61, keepaspectratio]{fig/petri.pdf}
+                \includegraphics[scale=0.18, keepaspectratio]{fig/petri_doprava.png}
                 \caption{Petriho síť}
                 \label{fig:petri_nest}
             \end{figure}
@@ -126,52 +156,45 @@
             \begin{table}[H]
                 \centering
                 \begin{tabular}{ l l }
-                    $P_1$ & Generování požadavků \\
-                    $P_2$ & Fronta požadavků \\
-                    $P_3$ & Přesun na bojiště \\
-                    $P_4$ & Příprava na nabíjení \\
-                    $P_5$ & Nabíjení \\
-                    $P_6$ & Palba \\
-                    $P_7$ & Odchod požadavků ze systému \\
-                    $P_8$ & Přesun zpět do tábora (z~důvodu poruchy) \\
-                    $P_9$ & Oprava houfnice \\
-                    $P_{10}$ & Přesun zpět do tábora \\
-                    $L$ & Linka houfnic \\
-                    $V$ & Linka jednotek vojáků
+                    $X$ & Kapacita linky autobusu \\
+                    $N$ & N-tá linka reprezentující autobusovou zastávku o kapacitě 1 \\
+                    $A$ & Pravděpodobnost dopravní zácpy \\
+                    $B$ & Doba čekání v zácpě dané exponenciálním rozložením se zadaným středem \\
+                    $C$ & Doba přejezdu do další zastávky dané exponenciálním rozložením se zadaným středem \\
+                    $D$ & Pravděpodobnost nehody \\
+                    $E$ & Reprezentuje dobu přejezdu mezi zastávkami \\
+                    \textit{Červené bloky} & Znázorňují zvýšenou prioritu přechodu, priorita = 1\\
+                    \textit{Bílé bloky} & Znázorňují časové přechody\\
+                    \textit{Černé bloky} & Znázorňují funkční/nečasové přechody\\
                 \end{tabular}
                 \caption{Legenda k~Petriho síti}
                 \label{tab:petri}
             \end{table}
 
+
     \section{Architektura simulačního modelu}
     \label{sec:architecture}
 
         Spuštěním simulačního modelu~\cite[snímek 44]{IMS_slides} se spustí simulační experiment se zadanými parametry.
-        Parametry a jejich zadávání je popsáno v~kapitole~\ref{subsec:start}. Během simulačního experimentu jsou vypisovány všechny změny stavu,
-        výpis každé změny stavu je doprovázen modelovým časem~\cite[snímek 21]{IMS_slides}. Modelový čas je vypisován v sekundách. Příkladem změny stavu může být např. to, že se autobus dostal do havárie. Nebo to, že sme na místo havárie poslali nový autobus, příjezd autobusu na zastávku, popřípadě na konečnou zastávku. Stavy jsou znázorněny v~Petriho síti,
-        která reprezentuje konceptuální model v~kapitole~\ref{subsec:conceptual_model}.
+        Parametry a jejich zadávání jsou popsány v~kapitole~\ref{subsec:start}. Během simulačního experimentu jsou vypisovány všechny podstatné změny stavů.
+        Výpis každé změny stavu je doprovázen modelovým časem~\cite[snímek 21]{IMS_slides}. Modelový čas odpovídá sekundám reálného času. Příkladem změny stavu může být například to, že se autobus dostal do havárie, nebo to, že se na místo havárie vyslal nový autobus. Stavy a jejch přechody jsou znázorněny v~Petriho síti v~kapitole~\ref{subsec:conceptual_model}.
 
-        Pro účely simulace jsme si vybrali autobusovou linku č. 501, která jezdí z Ústředního hřbitova do Ořechova mimo dopravní špičku. Tomu odpovídají defaultní hodnoty našeho modelu, které vychází z jízdního řádu (např. jak daleko jsou od sebe jednotlivé autobusové zastávky).
+		Pro účely simulace byl simulační čas nastaven na 1 hodinu a 40 minut. Tato doba byla určena na základě jízdního řádu. Jízdnímu řádu odpovídají i intervaly, po kterých je vygenerován požadavek na vyslání autobusu a doba jeho přesunu mezi zastávkami.
 
-
-        Simulační experiment v defaultním nastavení běží tak, aby co nejlépe popisoval autobusovou linku č. 501 mimo dopravní špičku.
-        Experiment ve výchozím stavu běží tak, aby doba trvání experimentu odpovídala 6000 sekundám (1.66 hodinám) v~reálném čase~\cite[snímek 21]{IMS_slides}. Tato doba odpovídá době od výjezdu prvního autobusu až po tom, co poslední autobus přijede na konečnou zastávku, mimo dopravní špičku.
         Modelový čas~\cite[snímek 21]{IMS_slides} lze nastavit způsobem popsaným v~kapitole~\ref{subsec:start}. Jednotka modelového času je chápána jako
         sekunda v~reálném čase.
-        Dále zde pracujeme se~šancí 5\%, že se autobus dostane do dopravní zácpy, ve které průměrně strávi 300 sekund (5 minut).\\ A s 0.00471\% šancí, že autobus zhavaruje. Obě proměnné jsou také nastavitelná, jelikož se můžou měnit na základě různých vnějších vlivů.
+        Model dále pracuje s~5~\%~šancí , že se autobus dostane do dopravní zácpy, ve které průměrně strávi 300 sekund (5 minut) a s 0.00471\% šancí, že autobus havaruje. Obě proměnné jsou nastavitelné.
 
         \subsection{Mapování konceptuálního modelu do simulačního modelu}
         \label{subsec:mapping}
 
-            Generování požadavků palby je reprezentováno třídou \texttt{Generátor}, která je implementována jako
-            událost~\cite[snímek 169]{IMS_slides}. Proces přesunu na bojiště, nabíjení, palby a~návratu zpět, je 
-            implementována třídou \texttt{Palba}. Dalším samostatným procesem je porucha (včetně přesunu zpět do tábora a~následné opravy),
-            ta je reprezentována třídou \texttt{Porucha}. Proces dezerce jednotek vojáků je reprezentován třídou \texttt{Dezerce}.
+            Generování požadavků na vypravení autobusu je reprezentováno třídou \texttt{BusDispatcher}, která je implementována jako
+            událost~\cite[snímek 169]{IMS_slides}. Proces chování autobusu je implementován třídou \texttt{Bus}. Dalším samostatným procesem je nehoda, která je reprezentována třídou \texttt{Accident}. 
 
         \subsection{Spouštění simulačního modelu}
         \label{subsec:start}
 
-            Simulační experiment je možné spouštět s~parametry, pokud není parametr zadán, použije se výchozí hodnoty pro linku č.~501 popsané v kapitole \ref{sec:architecture}
+            Simulační experiment je možné spouštět s~parametry. Pokud není zadán žádný parametr, použije se výchozí hodnoty pro linku číšo 501.
             
             \begin{itemize}
                 \item Parametr \texttt{-t} umožňuje nastavit modelový čas, jeho výchozí hodnota je 6000 sekund.
@@ -195,25 +218,21 @@
     \section{Podstata simulačních experimentů a~jejich průběh}
     \label{sec:simulation}
 
-        Cílem experimentů bylo pozorování chování modelu.
-        Účelem bylo zjistit, na základě chování modelu, optimální jízdní řád na danou linku hromadné dopravy (v našem případě linka č. 501). Optimální jízdní řád zjišťujeme na základě spokojenosti cestujících. Pokud cestující přijel včas do cílové zastávky, předpokládáme, že je spokojen. Pokud přijel se zpožděním, předpokládáme, že nebyl spokojen. Výstupem pak je průměrná spokojenost cestujícího v daném autobusu, která může být buď kladná, nebo záporná.
-
+        Cílem experimentů bylo pozorovat chování modelu a vytvořit závěry ohledně zvolené autobusové linky. Pozorováním modelu bylo možné dojít k závěrům, které ukazují, že je v současné době nejlepší variantou přistoupit k používání výlukového jízdního řádu, jako tomu ve skutečnosti je.
         \subsection{Postup experimentování}
         \label{subsec:experiments_methods}
+			Experimentování probíhalo tak, že byly na základě jízdních řádů spočítány vstupní hodnoty pro několik situací. Výsledky z experimentů byly po dokončení validovány se skutečností.
 
-            Samotný experiment byl spouštěn s danými parametry, které jsme zanesli do tabulky. Pokud některé parametry nejsou v tabulce zaneseny, počítáme s jejich defaultní hodnotou. Poslední položka tabulky je vždy spokojenost cestujících, která nám říká, jestli byl průměrně cestující s jízdou spokojen, či nikoliv. Pokud byl průměrně cestující spokojen, můžeme říci, že jízdní řád je sestaven správně a celkový počet autobusů na lince je v pořádku. Pokud je spokojenost cestujících podprůměrná, musíme se zamyslet, kde nastala chyba. U každého experimentu je také screenshot s výstupem našeho nástroje.
-            Pokud by byla modelována jiná linka, pomocí parametrů lze nastavit všechny potřebné proměnné. Náš model je tímto ve svém oboru zajímavý, jelikož se dá použít na jakoukoliv linku hromadné dopravy.
-        \newpage
+            Experiment každé jedné situace byl spouštěn se zvolenými parametry, které jsou zaneseny v tabulkách níže. Nejsou--li v tabulce některé parametry uvedeny, byla uvažována jejich implicitní hodnota. Každého experimentu je doplněn také o snímek s výstupem z implementovaného modelu.
         \subsection{Experimenty}
         \label{subsec:experiments}
 
-            Každý experiment je spuštěn s danými parametry, má úvod a závěr. Nachází se u~něj výpis spokojenosti cestujících a screenshost z výstupu simulace.
-
+            Každý experiment má svůj dílčí cíl a závěr a nachází se u něj výpis jeho výsledků. Výsledky všech experimentů dohromady utváří celkový výsledek.
+			\newpage
             \subsubsection{Experiment 1}
             \label{subsubsec:experiment1}
 
-                Cílem tohoto experimentu je ověření
-                toho, jestli jízdní řád linky č. 501 \cite{Jizdni_rad} funguje správně v časy mimo dopravní špičku při nízkém vytížení cestujícími. Jsou použity výchozí hodnoty.
+                Cílem tohoto experimentu je ověření funkčnosti modelu s výchozími vstupy a získání doporučení ohledně jízdního řádu zvolené linky mimo dopravní špičku.
 
                 \begin{table}[H]
                     \centering
@@ -231,7 +250,7 @@
                     \label{tab:experiment1}
                 \end{table}
 
-                Na obrázku \ref{fig:experiment1} vidíme výstup naší simulace a můžeme vidět, že když neuvažujeme dopravní spičku, jízdní řád autobusové linky č. 501 je vytvořen správně. Lidé jsou spokojeni a průměrný čas v dopravních zácpách je velmi malý. Takže autobus přijel se zanedbatelním zpožděním.
+				Z výsledku je patrné, že pro zadané parametry by mohl být výstup optimální. Hlavní znaky optimálního výsledku jsou spokojenost pasažérů a nízké opoždění autobusů. Dále model říká, že z dostupných autobusů využil všechny a tím pádem je i z hlediska využití dostupných zdrojů optimální. Dále je z podrobných výpisů změn stavů patrné, že se některý z autobusů dostal do dopravní zácpy.
 
                 \begin{figure}[H]
                 \includegraphics[scale=0.45, keepaspectratio]{fig/ims_bus1.png}
@@ -241,8 +260,7 @@
         \newpage
             \subsubsection{Experiment 2}
             \label{subsubsec:experiment2}
-
-                V~tomto experimentu se pokusíme zjistit, jak se námi vybraná autobusová linka č. 501 chová, v dopravní špičce, kdy je větší šance dostat se do zácpy a nastupuje více lidí, než obvykle. 
+				Tento experiment se zaměřuje na situaci, kdy se zvolená autobusová linka nachází v dopravní špičce. V dopravní špičce je zvýšená pravděpodobnost dopravní komplikace a je řádově více lidí, kteří potřebují nastoupit.
 
                 \begin{table}[H]
                     \centering
@@ -260,7 +278,9 @@
                     \label{tab:experiment2}
                 \end{table}
 
-                Z~obrázku~\ref{fig:experiment2} vidíme, že pokud se jedná o dopravní špičku, tak jsou cestující nespokojení. Strávili spoustu času v dopravní zácpě a přijeli pozdě. V tomto případě by možné řešení byl zvýšit počet autobusů na lince v době dopravních špiček a změnšit interval, ve kterém autobusy po sobě vyjíždí.
+				Experiment dokázal, že je situaci za dopravní špičky diametrálně odlišná a je potřeba ji řešit. Na základě výstupů je vidět, že pasažéři nebyli spokojeni. Z výstupů lze vyvodit, že je tato situace způsobena faktem, že drtívá většina autobusů vyrazila opožděná (musela čekat na obsluhu). Situace vznikla tak, že autobusy dlouho stály v dopravní zácpě a nestíhaly včas vyrazit na novou cestu.
+                
+                Model pro tuto situaci doporučuje upravit jízdní řád snížením intenzity požadavků, nebo zvýšit počet autobusů na lince.
 
                 \begin{figure}[H]
                 \includegraphics[scale=0.48, keepaspectratio]{fig/ims_bus2.png}
@@ -271,7 +291,8 @@
             \subsubsection{Experiment 3}
             \label{subsubsec:experiment3}
 
-                V jízdním řádu \cite{Jizdni_rad} si můžeme všimnout, že občas autobus jezdí "zkrácenou linku". Neboli nevyjíždí z Ústředního hřbitova, ale až z druhé zastávky, z Ořechovské. Důvodem je, že mezi první a druhou zastávkou bývá v dopravní špičce velká pravděpodobnost toho, že se autobus dostane do zácpy, a že ta zácpa bude trvat déle než je únosné. Proto zkusíme otestovat, jaký bude výstup naší simulace, když nastavíme parametry, které budou představovat zkrácenou linku v dopravní špičce.
+				Na základě předchozího experimentu, jehož výsledek je patrný na obrázku \ref{tab:experiment2} je potřeba změnit jízdní řád. Trasa linky 501 umožňuje vynechat problémový úsek mezi zastávkami Ořechovská a Ústřední hřbitov, protože na zastávce Ořechovská je možné přesoupit na tramvaj.
+                V jízdním řádu \cite{Jizdni_rad} je patrné, že se tak v době dopravní špičky děje a autobus jezdí \enquote{zkrácenou linku}. Parametry experimentu proto byly nastaveny tak, aby odpovídaly této \enquote{zkrácené lince}.
                 
 
                 \begin{table}[H]
@@ -292,7 +313,7 @@
 
             
 
-                Na obrázku \ref{fig:experiment3} můžeme vidět, že zkrácená linka funguje i v dopravní špičce, takže dává smysl ji v jízdním řádu zachovat tak, jak je.
+                Model vyhodnotil že \enquote{zkrácenou linku} jako fungující i v dopravní špičce. Tím pádem by takovýto jízdní řád bylo možné použít. Ve skutečnosti se opravdu takovýto zkrácený řád používá.
 
                 \begin{figure}[H]
                 \includegraphics[scale=0.48, keepaspectratio]{fig/ims_bus3.png}
@@ -302,32 +323,27 @@
             \newpage
             \subsubsection{Experiment 4}
             \label{subsubsec:experiment4}
-                V~tomto experimentu budeme zkoumat klasickou nezkrácenou linku mimo dopravní špičku
-
-
-                V~tomto experimentu budeme vycházet z~hodnot a~výsledků experimentu 3 v~kapitole~\ref{subsubsec:experiment3} a~vyzkoušíme,
-                zda jsou dobře využitelné i~v~delším časovém intervalu, v~tomto případě 7 dní (10080 minut).
+                V~tomto experimentu byla snaha vylepšit nezkrácenou linku mimo dopravní špičku přidáním několika autobusů se zachováním jízdního řádu. 
 
                 \begin{table}[H]
-                    \centering
-                    \begin{tabular}{ | c | c | c | c | c | }
-                        \hline
-                        Intenzita požadavků [min] & Celkový čas [min] & Bez čekání & S~čekáním & Celkem \\
-                        \hline
-                        \hline
-                        130 & 10080 & 65 & 12 & 77 \\
-                        \hline
-                    \end{tabular}
-                    \caption{Výsledky experimentu 4}
-                    \label{tab:experiment4}
+                	\centering
+                	\begin{tabular}{ | c | c |}
+                		\hline
+                		Počet autobusů & Spokojenost\\
+                		\hline
+                		\hline
+                		4 & \textcolor{green}{Above average} \\
+                		\hline
+                	\end{tabular}
+                	\caption{Parametry experimentu 4}
+                	\label{tab:experiment4}
                 \end{table}
 
-                Z~výsledků je patrné, že počet požadavků, které musely na svoji obsluhu čekat, narostl,
-                stále však byla většina požadavků obsloužena bez čekání.
+                Z~výsledků je patrné, že přidáním autobusů se nic nezlepší. Výstup pokusu upozorňuje na přebytečné množství rezervovaných autobusů.
 
                  \begin{figure}[H]
                 \includegraphics[scale=0.37, keepaspectratio]{fig/ims_bus4.png}
-                \caption{Výsledek experimentu  - zkrácená linka v dopravní špičce}
+                \caption{Výsledek experimentu  - nezkrácená linka mimo špičku s přidáním několika autobusů}
                 \label{fig:experiment4}
                     \end{figure}
 
@@ -335,7 +351,7 @@
             \subsubsection{Experiment 5}
             \label{subsubsec:experiment5}
 
-                Cílem posledního experimentu bylo vyzkoušet, jak by autobusová linka fungovala, kdyby na ní jezdil jen 1 autobus.
+                Cílem posledního experimentu bylo vyzkoušet, jak by autobusová linka fungovala, kdyby se počet autobusů na ní jezdící naopak snížil
     
                 \begin{table}[H]
                     \centering
@@ -351,7 +367,7 @@
                     \label{tab:experiment5}
                 \end{table}
 
-            Jak můžeme vidět na obrázku \ref{fig:experiment5}, pokud by jezdil jen jeden autobus v podmínkách dané klasickou nezkrácenou linkou mimo dopravní špičku, spokojenost cestujících by byla negativní. Bud bychom museli zvýšit počet autobusů a nebo snížit frekvenci, s jakou autobusy jezdí (např. autobus by jezdil jen každé 3h).
+            Dle výsledku experimentu by v situaci, kdy by za daných podmínek jezdil jen jeden autobus byla spokojenost cestujících negativní. Model doporučuje zvýšit počet autobusů, nebo snížit frekvenci s jakou autobusy jezdí (například vyslat autobus jednou za hodinu).
                 
                 \begin{figure}[H]
                 \includegraphics[scale=0.37, keepaspectratio]{fig/ims_bus5.png}
@@ -369,13 +385,13 @@
 \newpage
     \section{Shrnutí simulačních experimentů a~závěr}
     \label{sec:summary}
-            V~rámci našich experimentů jsme ověřili, že momentální jízdní řád autobusové linky č. 501 je správně vymyšlen a dobře řeší problematiku dopravních špiček.
+            V~rámci experimentů jsme ověřili, že aktuální jízdní řád autobusové linky číslo 501 je vymyšlen dobře a měl by být odolný vůči aktuální dopravní situaci. Vzhledem k faktu, že výsledky simulace korespondují s výlukovým jízdním řádem, dalo by se říci, že výsledky jsou validní.
 
-            Za validaci výsledků můžeme považovat to, že naše výstupy korespondují s jízdním řádem.
+			V rámci této práce byl vytvořen nástroj, který je schopen napomáhat s tvorbou ideálních jízdních řádu. Nástroj může pomoci s návrhem ideální dopravní infrastruktury, může pomáhat uspokojovat potřeby cestujících a může se uplatnit i jako pomocník s úsporou financí. 
+			
+			Nástroj byl implementován v jazyce C++ s využitím knihovny SIMLIB. Zadáním parametrů je možné model nastavovat a modifikovat tak, aby jej bylo možné využít na řadě dalších uzlech hromadné osobní přepravy. Výstupem modelu je především spokojenost cestujících, podle které můžeme parametry iterativně upravovat, abychom dostali ideální výsledky. Společně se spokojeností dále ze simulace vystupují podrobné statistiky, které napomáhají činit správné kroky k dosažení cíle.
 
-            Vytvořili jsme nástroj, který je schopen pomáhat s tvorbou ideálních jízdních řádů. Nástroj byl implementován v jazyce C++ a využívá knihovnu SIMLIB. Umožňuje spouštět simulační experimenty s různými parametry, takže se dá využít nad libovolnou linkou hromadné dopravy. Vstupem jsou tedy parametry linky hromadné dopravy (popsáno v sekci \ref{subsec:start}) a výstupem je spokojenost cestujících, podle které můžeme parametry iterativně upravovat, abychom dostali ideální jízdní řád pro danou linku. 
-
-            Nástroj by se mohl využívat přímo provozovatelem autobusů. Za předpokladu, že by měl svá přesnější data (např. ohledně počtu cestujících na jednotlivých zastávkách), mohl by velmi efektivně zoptimalizovat své jízdní řády a počty autobusů na jednotlivých linkách. Výsledkem by mělo být, že více cestujících bude spokojených se službou hromadné dopravy.
+			Nástroj by mohl být využit těmi, kteří se zaměřují na plánování spojů a linek hromadné osobní přepravy. Cílovou skupinou jsou tedy především dopravní podniky, cestovní agentury a podobně. Za předpokladu, že jsou do modelu vložena velmi přesná by model mohl být velmi efektivní nástroj pro optimalizaci nákladů a dalších zdrojů. Výsledkem použití nástroje by měla být vyšší spokojenost na straně zákazníka i klienta (tedy dopravce i cestujícího).
             
 
 
