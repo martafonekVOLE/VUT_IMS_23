@@ -77,7 +77,7 @@ void Bus::BusMovement()
         // If bus is replacement bus, it will take some time to reach accident site
         if(! isSpareBus)
         {
-            double normal = Normal(glob_time_between_stops, 60);
+            double normal = Normal(glob_time_between_stops, 1);
             double waitTime = (waitTimeToFirstStop != 0.0) ? waitTimeToFirstStop : (normal >= 0 ? normal : 0);
             Wait(waitTime);
             waitTimeToFirstStop = 0.0;
@@ -100,7 +100,7 @@ void Bus::BusMovement()
 
     Print("\n[Time: %f]\tAutobus číslo [%d] dokončil linku a vrací se zpět.", Time, (actualBus + 1));
     for (int i = 0; i < currentBusStop; i++) {
-        double normal = Normal(glob_time_between_stops, 60);
+        double normal = Normal(glob_time_between_stops, 1);
         double wait = normal >= 0.0 ? normal : 0;
         Wait(wait);
     }
@@ -154,7 +154,7 @@ void Bus::HandleBusStop(int currentBusStop)
             }
         }
 
-        Wait(Exponential(90));
+        Wait(Exponential(1.5));
         Release(glob_bus_stops_vector[currentBusStop][0]);
 
         if(glob_bus_stop_queues_vector[currentBusStop]->Length() > 0)
