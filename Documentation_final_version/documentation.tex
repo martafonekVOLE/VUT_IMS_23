@@ -46,7 +46,7 @@
         {\Large \today \hfill
         \begin{tabular}{l l}
             \textbf{Martin Pech} & \textbf{(\texttt{xpechm00})} \\
-            Josef Škorpík & (\texttt{xskorp04})
+            Josef Škorpík & (\texttt{xskorp07})
         \end{tabular}}
     \end{titlepage}
 
@@ -78,9 +78,9 @@
             
             Mimo tento úsek dané linky byly hodnoty zpoždění pouze zanedbatelné a to jak ve špičce, tak mimo ni. Díky tomu bylo možné jednoduše určit výchozí pravděpodobnost výskytu zácpy. Pravděpodobnost výskytu zácpy při špičce je tedy možné vyjádřit jako poměr problémového úseku vůči celkovému počtu úseků. Výsledná pravděpodobnost je tedy~\textbf{$\frac{1}{6}$}. 
             
-            Pro určení průměrného počtu cestujících na zastávkách bylo využito statistik \cite{Pocet_cestujicich} uvedených na portálu wikipedie.org. Podle tohoto zdroje provozoval v roce 2022 Dopravní podnik města Brna 328 autobusů určených pro městskou osobní dopravu. Tyto autobusy v roce 2022 přepravily 111,7 milionů cestujících. Výchozí použitý autobus a jeho kapacita odpovídá typu SOR CN 12 \cite{PSOR_CN_12}.
+            Pro určení průměrného počtu cestujících na zastávkách bylo využito statistik \cite{Pocet_cestujicich} uvedených na portálu wikipedia.org. Podle tohoto zdroje provozoval v roce 2022 Dopravní podnik města Brna 328 autobusů určených pro městskou osobní dopravu. Tyto autobusy v roce 2022 přepravily 111,7 milionů cestujících. Výchozí použitý autobus a jeho kapacita odpovídá typu SOR CN 12 \cite{PSOR_CN_12}.
             
-            Z těchto údajů vyplývá, že jeden autobus převeze průměrně 39 lidí za hodinu. Trasa linky číslo 501 trvá ve vybraném úseku 9 minut a jede průměrně 3$\times$ za hodinu. Během jedné jízdy autobus převeze průměrně 13 lidí. 
+            Z těchto údajů vyplývá, že jeden autobus převeze průměrně 39 lidí za hodinu. Trasa linky číslo 501 trvá ve vybraném úseku 9 minut a auotbus po ní jede průměrně 3$\times$ za hodinu. Během jedné jízdy autobus převeze průměrně 13 lidí. 
             Po rozpočítání tohoto počtu mezi 7 zastávek, zůstavají průměrně 2 lidi na zastávku.
             Tato statistika vychází z celoročních dat, tudíž jsou zde počítány jak spoje v dopravní špičce, tak i noční spoje, kde je nízké vytížení. Tento vypočtený údaj je pro daný model nedostatečný, ale nebylo možné vyhledat lepší údaje. Ze zkušenosti jednoho z řešitelů je ale průměrný počet lidí na zastávce mnohem vyšší, zejména ve špičce.
 
@@ -118,7 +118,7 @@
  		V takovém případě se na linku vysílá náhradní autobus, který převezme všechny cestující z havarovaného autobusu a pokračuje dál na lince. Nabouraný autobus již není možné použít.
  		
  		Z výše popsaných dat vyplývá, že se průměrně na každé zastávce vyskytují 2 lidé. Obdobně uvažujeme i počet vystupujících. Obecně ale platí, že se cestující generují s rovnoměrným rozložením, daným intervalem <0, x>, kde x může uživatel nastavit přepínačem jak pro nástup, tak pro výstup. Výchozí hodnota je pro oba případy $x = 4$. Výjimkou je poslední zastávka, kde se implicitně uvažuje výstup všech cestujících.
- 		Naložení a vyložení cestujících trvá průměrně 1,5 minuty. Průměrný čas mezi jednotlivými zastávkami na této lince je 1,3 minuty. 
+ 		Naložení a vyložení cestujících trvá průměrně 0,5 minuty. Průměrný čas mezi jednotlivými zastávkami na této lince je 1 minuta. 
  		Ve výchozím nastavení vyjíždí nový autobus každých 11,25 minut a k dispozici jsou tři autobusy s kapacitou 75 míst.  Všechny v této kapitole popsané parametry lze modifikovat pomocí argumentů příkazové řádky při spouštění modelu.
      
         \subsection{Popis použitých postupů}
@@ -202,7 +202,7 @@
                 \item Parametr \texttt{-a} umožňuje nastavit pravděpodobnost, s jakou se autobus dostane do havárie. Hodnota parametru musí být kladné číslo v intervalu <0,1>.
                 \item Parametr \texttt{-b} umožňuje nastavit počet autobusů, které operují na dané lince hromadné dopravy. Výchozí hodnota je 2. Hodnota musí být kladné celé číslo.
                 \item Parametr \texttt{-s} umožňuje nastavit počet autobusových zastávek na dané lince. Výchozí hodnota je 7. Hodnota musí být kladné celé číslo.
-                \item Parametr \texttt{-l} umožňuje nastavit pruměrný čas mezi jednotlivými autobusovými zastávkami. Výchozí hodnota je 1,3 minuty. Hodnota musí být kladné číslo.
+                \item Parametr \texttt{-l} umožňuje nastavit pruměrný čas mezi jednotlivými autobusovými zastávkami. Výchozí hodnota je 1 minutu. Hodnota musí být kladné číslo.
                 \item Parametr \texttt{-g} umožňuje nastavit interval, ve kterém vyjíždí jednotlivé autobusy. Výchozí hodnota je 11,25 minut. Hodnota musí být kladné číslo.
                 \item Parametr \texttt{-w} umožňuje nastavit čas, který průměrně autobus stráví v dopravní zácpě. Výchozí hodnota je 5 minut. Hodnota musí být kladné číslo.
                 \item Parametr \texttt{-j} umožňuje měnit šanci, se kterou se autobus dostane do dopravní zácpy. Výchozí hodnota je nastavena na 0.00471\%. Parametr musí být kaldné číslo v intervalu <0,1>.
