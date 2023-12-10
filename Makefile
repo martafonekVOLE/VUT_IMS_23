@@ -10,6 +10,7 @@ all:
 
 run:
 	./$(PROJECT)
+	./$(PROJECT) $(ARGS)
 
 clean:
 	rm $(PROJECT) $(PROJECT).o arg_parse.o
