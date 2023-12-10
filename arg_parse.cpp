@@ -58,7 +58,7 @@ double glob_traffic_jam_rate = 5.0;
 
 double glob_traffic_jam_wait_time = 300.0;
 
-int glob_amount_of_buses = 2;
+int glob_amount_of_buses = 3;
 
 int glob_amount_of_bus_stops = 7;
 

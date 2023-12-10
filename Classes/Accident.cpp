@@ -36,7 +36,8 @@ void Accident::Behavior()
 {
     double waitingTimeForReplacementBus = 0.0;
     for (int currentBusStop = 0; currentBusStop < busStop; currentBusStop++) {
-        waitingTimeForReplacementBus += Normal(glob_time_between_stops, 180);
+        double normal = Normal(glob_time_between_stops, 90);
+        waitingTimeForReplacementBus += normal >= 0 ? normal : 0;
     }
 
     (new Bus(busStop, waitingTimeForReplacementBus, busNumber, people))->Activate();
