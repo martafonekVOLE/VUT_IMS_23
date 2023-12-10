@@ -199,13 +199,13 @@
             
             \begin{itemize}
                 \item Parametr \texttt{-t}  nastavit modelový čas, jeho výchozí hodnota je 100 minut a jeho hodnota musí vždy být kladné číslo.
-                \item Parametr \texttt{-a} umožňuje nastavit pravděpodobnost, s jakou se autobus dostane do havárie. Hodnota parametru musí být kladné číslo v intervalu <0,1>.
+                \item Parametr \texttt{-a} umožňuje nastavit procentuální šanci, s jakou se autobus dostane do havárie. Hodnota parametru musí být kladné číslo v intervalu <0,100>.
                 \item Parametr \texttt{-b} umožňuje nastavit počet autobusů, které operují na dané lince hromadné dopravy. Výchozí hodnota je 2. Hodnota musí být kladné celé číslo.
                 \item Parametr \texttt{-s} umožňuje nastavit počet autobusových zastávek na dané lince. Výchozí hodnota je 7. Hodnota musí být kladné celé číslo.
                 \item Parametr \texttt{-l} umožňuje nastavit pruměrný čas mezi jednotlivými autobusovými zastávkami. Výchozí hodnota je 1 minutu. Hodnota musí být kladné číslo.
                 \item Parametr \texttt{-g} umožňuje nastavit interval, ve kterém vyjíždí jednotlivé autobusy. Výchozí hodnota je 11,25 minut. Hodnota musí být kladné číslo.
                 \item Parametr \texttt{-w} umožňuje nastavit čas, který průměrně autobus stráví v dopravní zácpě. Výchozí hodnota je 5 minut. Hodnota musí být kladné číslo.
-                \item Parametr \texttt{-j} umožňuje měnit šanci, se kterou se autobus dostane do dopravní zácpy. Výchozí hodnota je nastavena na 0.00471\%. Parametr musí být kaldné číslo v intervalu <0,1>.
+                \item Parametr \texttt{-j} umožňuje nastavit procentuální šanci, se kterou se autobus dostane do dopravní zácpy. Výchozí hodnota je nastavena na 0.00471\%. Parametr musí být kladné číslo v intervalu <0,100>.
                 \item Parametr \texttt{-c} umožňuje nastavit kapacitu cestujících autobusu. Výchozí hodnota je 75 cestujících. Hodnota musí být kladné  celé číslo.
             
             \item Parametr \texttt{-i} umožnuje nastavit pravou hranici intervalu <0,x> rovnoměrného rozložení, podle kterého se určuje počet cestujících čekajících na zastávce. Hodnota musí být kladné celé číslo.
@@ -340,7 +340,7 @@
                 		Počet autobusů & Spokojenost\\
                 		\hline
                 		\hline
-                		4 & \textcolor{green}{Nadprůměrná} \\
+                		5 & \textcolor{green}{Nadprůměrná} \\
                 		\hline
                 	\end{tabular}
                 	\caption{Parametry experimentu 4}
@@ -350,7 +350,7 @@
                 Z~výsledků je patrné, že přidáním autobusů se nic nezlepší. Výstup pokusu upozorňuje na přebytečné množství vyhrazených autobusů.
 
                  \begin{figure}[H]
-                \includegraphics[scale=0.37, keepaspectratio]{fig/ims_bus4.png}
+                \includegraphics[scale=0.48, keepaspectratio]{fig/ims_bus4.png}
                 \caption{Výsledek experimentu  - nezkrácená linka mimo špičku s přidáním několika autobusů}
                 \label{fig:experiment4}
                     \end{figure}
