@@ -8,14 +8,14 @@
 \providecommand{\selectlanguage}[1]{\relax}
 \providecommand{\eprint}[2][]{\url{#2}}
 
-\bibitem{Pocet_cestujicich}
-Městská autobusová doprava v Brně. [online], 1. listopadu 2023.
-\urlprefix\url{https://cs.wikipedia.org/wiki/M%C4%9Bstsk%C3%A1_autobusov%C3%A1_doprava_v_Brn%C4%9B}
-
 \bibitem{Jizdni_rad}
-JMK, I.: Integrovaný dopravní systém jihomoravského hraje, jízdní řád.
+IDSJMK: Integrovaný dopravní systém jihomoravského hraje, jízdní řád.
   [online], 4. září 2023.
 \urlprefix\url{https://content.idsjmk.cz/jrady23/230904/501.pdf}
+
+\bibitem{Pocet_ridicaku}
+MDČR: Počet řidičských průkazů. [online], 15. prosince 2020.
+\urlprefix\url{https://www.mdcr.cz/Ministerstvo/Zadost-o-poskytnuti-informace-(1)/Poskytnute-informace/Pocet-ridicskych-prukazu}
 
 \bibitem{IMS_slides}
 Peringer, P.; Hrubý, M.: Modelování a~simulace, Text k~přednáškám kursu
@@ -24,7 +24,15 @@ Peringer, P.; Hrubý, M.: Modelování a~simulace, Text k~přednáškám kursu
 \urlprefix\url{https://www.fit.vutbr.cz/study/courses/IMS/public/prednasky/IMS.pdf}
 
 \bibitem{Accident_statistics}
-ČR, P.: Statistika nehodovosti 2020. [online], 2020.
+PČR: Statistika nehodovosti 2020. [online], 2020.
 \urlprefix\url{https://www.policie.cz/clanek/statistika-nehodovosti-900835.aspx?q=Y2hudW09NA%3d%3d}
+
+\bibitem{Pocet_cestujicich}
+Wikipedia: Městská autobusová doprava v Brně. [online], 1. listopadu 2023.
+\urlprefix\url{https://cs.wikipedia.org/wiki/M%C4%9Bstsk%C3%A1_autobusov%C3%A1_doprava_v_Brn%C4%9B}
+
+\bibitem{PSOR_CN_12}
+Wikipedia: SOR CN 12. [online], 11. září 2023.
+\urlprefix\url{https://cs.wikipedia.org/wiki/SOR_CN_12}
 
 \end{thebibliography}
