@@ -112,7 +112,7 @@ void arg_parse(int argc, char *argv[]) {
             case ACCIDENT_RATE:
             {
                 double newFailureRate = std::stof(optarg);
-                if (newFailureRate > 100 || newFailureRate < 0)
+                if (newFailureRate > 100.0 || newFailureRate < 0.0)
                 {
                     std::cerr << "Argument ACCIDENT RATE vyžaduje číslo z intervalu <0,100>. Číslo reprezentuje pravděpodobnost výskytu chyby." << std::endl;
                     exit(1);
@@ -229,9 +229,9 @@ void arg_parse(int argc, char *argv[]) {
             case TRAFFIC_JAM_RATE:
             {
                 double newRate = std::stof(optarg);
-                if(newRate < 0.0)
+                if(newRate < 0.0 || newRate > 100.0)
                 {
-                    std::cerr << "Argument TRAFFIC_JAM_RATE vyžaduje číslo větší nebo rovno nule. Číslo reprezentuje pravděpodobnost dopravní zácpy." << std::endl;
+                    std::cerr << "Argument TRAFFIC_JAM_RATE vyžaduje číslo na intervalu <0,100>. Číslo reprezentuje procento pravděpodobnosti, se kterou se autobus dostane do dopravní zácpy." << std::endl;
                     exit(1);
                 }
 
