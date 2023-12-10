@@ -12,8 +12,6 @@
 #include "Bus.h"
 #include "../arg_parse.h"
 #include <cmath>
-#include <vector>
-#include <algorithm>
 
 /**
  * @inheritDoc
@@ -79,7 +77,7 @@ void Bus::BusMovement()
         // If bus is replacement bus, it will take some time to reach accident site
         if(! isSpareBus)
         {
-            double waitTime = (waitTimeToFirstStop != 0.0) ? waitTimeToFirstStop : Normal(glob_time_between_stops, 3);
+            double waitTime = (waitTimeToFirstStop != 0.0) ? waitTimeToFirstStop : Normal(glob_time_between_stops, 180);
             Wait(waitTime);
             waitTimeToFirstStop = 0.0;
         }
@@ -101,7 +99,7 @@ void Bus::BusMovement()
 
     Print("\n[Time: %f]\tAutobus číslo [%d] dokončil linku a vrací se zpět.", Time, (actualBus + 1));
     for (int i = 0; i < currentBusStop; i++) {
-        Wait(Normal(glob_time_between_stops, 3));
+        Wait(Normal(glob_time_between_stops, 180));
     }
     Print("\n[Time: %f]\tAutobus číslo [%d] je připraven k použití.", Time, (actualBus + 1));
 
@@ -153,7 +151,7 @@ void Bus::HandleBusStop(int currentBusStop)
             }
         }
 
-        Wait(Exponential(3));
+        Wait(Exponential(180));
         Release(glob_bus_stops_vector[currentBusStop][0]);
 
         if(glob_bus_stop_queues_vector[currentBusStop]->Length() > 0)
