@@ -62,7 +62,7 @@ int glob_amount_of_buses = 3;
 
 int glob_amount_of_bus_stops = 7;
 
-double glob_time_between_stops = 1.3;
+double glob_time_between_stops = 1;
 
 double glob_time_between_bus_starts = 11.25;
 

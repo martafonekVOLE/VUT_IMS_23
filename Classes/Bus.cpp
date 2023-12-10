@@ -154,7 +154,7 @@ void Bus::HandleBusStop(int currentBusStop)
             }
         }
 
-        Wait(Exponential(1.5));
+        Wait(Exponential(0.5));
         Release(glob_bus_stops_vector[currentBusStop][0]);
 
         if(glob_bus_stop_queues_vector[currentBusStop]->Length() > 0)
